@@ -18,9 +18,9 @@ const WhyWorkWithMe = () => {
                 key={index}
                 className="bg-white hover:shadow-xl shadow-gray-500 max-w-96 transition-all ease-in-out h-70 p-6 rounded-xl"
               >
-                <div className="p-2 bg-brand-primary inline-block rounded-xl">
+                <div className="p-3 shadow-md shadow-gray-500 bg-brand-primary inline-block rounded-full">
                   {" "}
-                  <Image src={item.image} alt="" width={35} height={35} />
+                  <Image src={item.image} alt="" width={32} height={32} />
                 </div>
                 <h3 className="text-xl font-semibold my-4">{item.title}</h3>
                 <p>{item.description}</p>
