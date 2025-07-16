@@ -5,10 +5,16 @@ import whyMe3 from './whyM3.svg'
 import offer1 from './Offer-1.svg';
 import offer2 from './Offer-2.svg';
 import offer3 from './Offer-3.svg';
+import arrow from "./arrow.svg";
+import hero from './hero.webp';
+import mobile from './mobile-mockup.svg';
 
 
 export const assets = {
-    logo
+    logo,
+    arrow,
+    hero,
+    mobile
 };
 
 // Links

@@ -138,3 +138,10 @@
     @apply bg-background text-foreground font-sans;
   }
 }
+
+::selection {
+  background: #82ff1f;
+  /* your selection background */
+  color: #111111;
+  /* your selection text color */
+}
