@@ -47,6 +47,7 @@
   --color-brand-primary: #82ff1f;
   --color-brand-light: #B9FF77;
   --color-brand-bg: #111111;
+  --color-brand-gray: #F8F8F8;
 }
 
 :root {
@@ -88,6 +89,8 @@
   --color-primary: #82ff1f;
   --color-primary-light: #B9FF77;
   --color-dark-bg: #111111;
+  --color-gray: #EDEDED;
+
 }
 
 .dark {
@@ -127,6 +130,7 @@
   --color-primary: #82ff1f;
   --color-primary-light: #B9FF77;
   --color-dark-bg: #111111;
+
 }
 
 @layer base {
