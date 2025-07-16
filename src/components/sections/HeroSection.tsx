@@ -14,7 +14,7 @@ const HeroSection = () => {
       <div className="w-[94%] md:w-[80%] pt-5 md:pt-16 md:h-[70vh] mx-auto flex flex-col items-center justify-center text-center">
         <Badge color="white" text="Available for Work" />
 
-        <h1 className="text-white uppercase font-extrabold pt-7 md:leading-[170px] text-[42px] sm:text-[64px] md:text-[96px] lg:text-[140px] xl:text-[180px] audio">
+        <h1 className="text-white uppercase font-extrabold pt-7 md:leading-[170px] text-[82px] sm:text-[64px] md:text-[96px] lg:text-[140px] xl:text-[180px] audio">
           Raza <br />
           <span className="text-brand-primary">Ali</span>ⓒ
         </h1>
