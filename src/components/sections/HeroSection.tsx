@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { assets } from "@/Assets/assets";
 import ArrowButton from "../shared/ArrowButton";
+import ScrollToTop from "../shared/ScrollToTop";
 
 const HeroSection = () => {
   return (
@@ -72,6 +73,7 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
+      <ScrollToTop />
     </div>
   );
 };
