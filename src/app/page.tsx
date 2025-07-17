@@ -1,5 +1,6 @@
 import { assets } from "@/Assets/assets";
 import AboutSection from "@/components/sections/AboutSection";
+import ByTheNumber from "@/components/sections/ByTheNumber";
 import HeroSection from "@/components/sections/HeroSection";
 import MyProcess from "@/components/sections/MyProcess";
 import MySuccessStories from "@/components/sections/MySuccessStories";
@@ -17,6 +18,7 @@ export default function Home() {
       <MyProcess />
       <WhatIOffer />
       <AboutSection />
+      <ByTheNumber />
     </div>
   );
 }

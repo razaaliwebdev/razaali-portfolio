@@ -215,7 +215,7 @@ export const socialLinks: SocialLinkes[] = [
     },
     {
         name: "Twitter",
-        link: "https://x.com/razaaliwebdev",
+        link: "https://x.com/razaaliwebdev  ",
         icon: 'twitter',
     },
     {
