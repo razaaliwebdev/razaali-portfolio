@@ -5,6 +5,8 @@ import whyMe3 from './whyM3.svg'
 import offer1 from './Offer-1.svg';
 import offer2 from './Offer-2.svg';
 import offer3 from './Offer-3.svg';
+import offer4 from './offer4.svg';
+import offer5 from './offer5.svg';
 import arrow from "./arrow.svg";
 import hero from './hero.webp';
 import mobile from './mobile-mockup.svg';
@@ -138,7 +140,7 @@ export const myProcess: MyProcess[] = [
 
 
 // What I Offer  / Services
-export type Service = {
+export type ServiceData = {
     image: string,
     title: string;
     subtitle: string;
@@ -147,7 +149,7 @@ export type Service = {
     cta: string;
 };
 
-export const whatIOffer: Service[] = [
+export const whatIOffer: ServiceData[] = [
     {
         image: offer1,
         title: "Web Design",
@@ -378,6 +380,111 @@ export const faqs: FAQ[] = [
 
 
 // ****************** SERVICES PAGE DATA **********************
+type Service = {
+    image: string;
+    title: string;
+    subtitle: string;
+    description: string;
+    features: string[];
+    startingPrice: string; // must be a string
+};
+
+
+export const services: Service[] = [
+    {
+        image: offer1,
+        title: "Full Stack Development",
+        subtitle: "MERN & Next.js Applications",
+        description:
+            "I develop full-stack web applications using the MERN stack and Next.js. My focus is on performance, scalability, and clean API integration with modern frontend architectures.",
+        features: [
+            "React.js & Next.js (App Router)",
+            "Node.js + Express.js Backend",
+            "MongoDB & Mongoose Database Integration",
+            "RESTful API Design & Authentication (JWT, OAuth)",
+        ],
+        startingPrice: "$750",
+    },
+    {
+        image: offer2,
+        title: "Frontend Development",
+        subtitle: "Modern, Responsive & Interactive UI",
+        description:
+            "I craft pixel-perfect, accessible, and mobile-responsive interfaces using modern frontend tools. My work emphasizes clean code, reusability, and optimized performance.",
+        features: [
+            "HTML5, CSS3, JavaScript (ES6+)",
+            "React.js with TypeScript",
+            "Tailwind CSS for utility-first design",
+            "Form Handling & EmailJS Integration",
+        ],
+        startingPrice: "$500",
+    },
+    {
+        image: offer3,
+        title: "Backend & API Development",
+        subtitle: "Secure, Scalable Server-Side Logic",
+        description:
+            "I build REST APIs with Node.js and Express.js, handling user auth, data flow, and scalable logic. Integrated with MongoDB for flexible and efficient data storage.",
+        features: [
+            "Node.js + Express.js Framework",
+            "MongoDB/Mongoose ODM",
+            "JWT Authentication & Middleware",
+            "API Routing & Validation",
+        ],
+        startingPrice: "$550",
+    },
+    {
+        image: offer4,
+        title: "Software Engineering & Deployment",
+        subtitle: "CI/CD, Hosting & Version Control",
+        description:
+            "I manage your app lifecycle from Git-based version control to production deployment with tools like Vercel and Render, including .env management and performance checks.",
+        features: [
+            "Git & GitHub Workflow",
+            "Deployment on Vercel / Render",
+            "Environment Variables & Production Build",
+            "Project Structure & Optimization",
+        ],
+        startingPrice: "$500",
+    },
+    {
+        image: offer5,
+        title: "Branding & Visual Identity",
+        subtitle: "Minimal Visual Design & Brand Presence",
+        description:
+            "I assist in creating a consistent visual identity for your digital brand — focusing on simplicity, legibility, and relevance to your target audience.",
+        features: [
+            "Custom Color Palette & Fonts",
+            "Clean UI Styling Consistency",
+            "Minimal Logo/Visual Direction",
+        ],
+        startingPrice: "$300",
+    },
+];
+
+export type Expect = {
+    title: string;
+    description: string
+}
+
+export const expectations: Expect[] = [
+    {
+        title: "Personalized Solutions",
+        description:
+            "I don’t believe in cookie-cutter code. Whether it’s a startup site or a full-stack web app, I tailor every solution to your specific needs using the right tech stack.",
+    },
+    {
+        title: "Clear & Consistent Communication",
+        description:
+            "You'll always know where your project stands. I provide regular updates, transparent timelines, and open collaboration throughout the development process.",
+    },
+    {
+        title: "Post-Launch Support",
+        description:
+            "I stand by my work. After deployment, I offer continued support, minor fixes, and guidance to ensure your app stays secure and up-to-date.",
+    },
+];
+
 
 
 
