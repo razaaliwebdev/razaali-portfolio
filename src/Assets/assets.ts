@@ -8,13 +8,17 @@ import offer3 from './Offer-3.svg';
 import arrow from "./arrow.svg";
 import hero from './hero.webp';
 import mobile from './mobile-mockup.svg';
+import minusIcon from './Minus-Icon.svg';
+import plusIcon from './Plus-Icon.svg';
 
 
 export const assets = {
     logo,
     arrow,
     hero,
-    mobile
+    mobile,
+    minusIcon,
+    plusIcon
 };
 
 // Links
@@ -336,6 +340,38 @@ export const experience: ExperienceType[] = [
 
 
 // ****************** PROJECTS PAGE DATA **********************
+export type FAQ = {
+    question: string;
+    answer: string;
+};
+
+export const faqs: FAQ[] = [
+    {
+        question: "What services do you offer?",
+        answer:
+            "I offer a range of services including web design, front-end development, UX/UI design, responsive design, e-commerce solutions, and brand identity creation. Visit my Services page for a detailed overview.",
+    },
+    {
+        question: "How do you approach a new project?",
+        answer:
+            "My process begins with a discovery call to understand your goals and audience. I then move into design, development, and deployment — ensuring a seamless journey from idea to live product.",
+    },
+    {
+        question: "What is your project timeline?",
+        answer:
+            "Project timelines vary based on complexity and scope. A typical website project can take 2–6 weeks. I’ll provide a detailed timeline after the initial consultation.",
+    },
+    {
+        question: "How much do your services cost?",
+        answer:
+            "Pricing depends on the project's requirements and deliverables. After our initial consultation, I’ll share a custom quote tailored to your goals and budget.",
+    },
+    {
+        question: "What platforms do you work with?",
+        answer:
+            "I specialize in the MERN stack (MongoDB, Express, React, Node.js) and Next.js for web apps. I also work with platforms like Vercel, Render, EmailJS, and CMSs like WordPress when needed.",
+    },
+];
 
 
 
