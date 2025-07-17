@@ -89,7 +89,7 @@ export const projects: Project[] = [
     {
         image: "/images/amingarage.png",
         title: "Amin Garage",
-        description: "A complete Garage Site using React js and Tailwind CSS",
+        description: "A complete Garage Site using React js and Tailwind CSS    ",
         liveLink: "https://amingarage.com/",
         githubLink: "https://github.com/razaaliwebdev/amingarage",
     }
@@ -161,7 +161,7 @@ export const whatIOffer: Service[] = [
         description:
             "I develop fully functional web apps using the MERN stack with clean, efficient, and scalable code that performs well across all devices and browsers.",
         features: [
-            "HTML, CSS, & JS Expertise",
+            "REACT, NODE, NEXT, & JS Expertise",
             "Cross-Browser Compatibility",
             "Faster Load Times",
         ],
