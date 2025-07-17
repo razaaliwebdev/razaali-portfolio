@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
+import ScrollToTop from "@/components/shared/ScrollToTop";
 
 // Load the Outfit font with CSS variable
 const outfit = Outfit({
@@ -26,6 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${outfit.className} font-sans antialiased`}>
         <Navbar />
+        <ScrollToTop />
         {children}
         <Footer />
       </body>
