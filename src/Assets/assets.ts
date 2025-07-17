@@ -83,15 +83,18 @@ type Project = {
     description: string;
     liveLink: string;
     githubLink: string;
+    category: "Frontend" | "Backend" | "Full Stack";
 };
 
 export const projects: Project[] = [
     {
         image: "/images/amingarage.png",
         title: "Amin Garage",
-        description: "A complete Garage Site using React js and Tailwind CSS    ",
+        description:
+            "A complete Garage website built using React.js, TypeScript, Tailwind CSS, and EmailJS for contact form functionality.",
         liveLink: "https://amingarage.com/",
         githubLink: "https://github.com/razaaliwebdev/amingarage",
+        category: "Frontend",
     }
 ];
 
@@ -333,6 +336,8 @@ export const experience: ExperienceType[] = [
 
 
 // ****************** PROJECTS PAGE DATA **********************
+
+
 
 
 
