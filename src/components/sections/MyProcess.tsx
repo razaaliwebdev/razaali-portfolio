@@ -18,7 +18,7 @@ const MyProcess = () => {
           {myProcess.map((item, index) => {
             return (
               <div
-                className="my-10 border-b-[1px] border-gray-500 py-3"
+                className="my-10 border-b-[1px] px-5 md:px-0 border-gray-500 py-3"
                 key={index}
               >
                 <h2 className="md:text-3xl text-4xl font-medium my-2">
