@@ -1,7 +1,5 @@
 import React from "react";
 import Badge from "../shared/Badge";
-import { Button } from "../ui/button";
-import Link from "next/link";
 import Image from "next/image";
 import { assets } from "@/Assets/assets";
 import ArrowButton from "../shared/ArrowButton";

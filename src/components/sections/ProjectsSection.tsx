@@ -1,12 +1,7 @@
-
 import React from "react";
 import Badge from "../shared/Badge";
-import { assets, projects } from "@/Assets/assets";
-import Image from "next/image";
+import { projects } from "@/Assets/assets";
 import ArrowButton from "../shared/ArrowButton";
-import { Button } from "../ui/button";
-import Link from "next/link";
-import { Github, Tv } from "lucide-react";
 import ProjectCard from "../shared/ProjectCard";
 
 const ProjectsSection = () => {
