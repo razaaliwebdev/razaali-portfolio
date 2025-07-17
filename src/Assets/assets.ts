@@ -89,7 +89,7 @@ export const projects: Project[] = [
     {
         image: "/images/amingarage.png",
         title: "Amin Garage",
-        description: "",
+        description: "A complete Garage Site using React js and Tailwind CSS",
         liveLink: "https://amingarage.com/",
         githubLink: "https://github.com/razaaliwebdev/amingarage",
     }
