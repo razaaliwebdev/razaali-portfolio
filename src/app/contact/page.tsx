@@ -1,4 +1,5 @@
 import ContactForm from "@/components/contact/ContactForm";
+import FindMe from "@/components/contact/FindMe";
 import FaqSection from "@/components/projects/FaqSection";
 import React from "react";
 
@@ -10,6 +11,7 @@ const page = () => {
           Contact
         </h1>
         <ContactForm />
+        <FindMe />
       </div>
       <div className="">
         <FaqSection />
