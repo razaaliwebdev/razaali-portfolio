@@ -19,6 +19,7 @@ export default function Home() {
       <WhatIOffer />
       <AboutSection />
       <ByTheNumber />
+      <MySuccessStories />
     </div>
   );
 }

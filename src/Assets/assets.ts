@@ -267,10 +267,10 @@ export const testimonials: Testimonial[] = [
     {
         quote:
             "Working with Raza was a game-changer for our platform. His full-stack expertise brought our vision to life with outstanding performance and clean design.",
-        name: "Jerome Bell",
-        position: "CTO",
-        company: "Waverio",
-        image: ""
+        name: "Adnan Amin",
+        position: "Co.Founder",
+        company: "WB DigiTech",
+        image: "https://images.unsplash.com/photo-1592046285097-6cdf4daf0d69?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Ym95c3xlbnwwfHwwfHx8MA%3D%3D"
     },
     {
         quote:
@@ -278,6 +278,6 @@ export const testimonials: Testimonial[] = [
         name: "Wade Warren",
         position: "Founder",
         company: "Creaty",
-        image: ""
+        image: "https://images.unsplash.com/photo-1611637576109-b6f76185ec9b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGJveXN8ZW58MHx8MHx8fDA%3D"
     },
 ];
