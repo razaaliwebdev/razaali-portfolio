@@ -10,7 +10,7 @@ const ContactForm = () => {
         <div className="md:w-[45%] w-full flex flex-col items-start">
           <Badge text="Book a call" color="white" />
           <h2 className="md:text-7xl text-4xl text-white font-semibold mt-5">
-            I'd love to hear from you!
+            I&apos;d love to hear from you!
           </h2>
         </div>
 
