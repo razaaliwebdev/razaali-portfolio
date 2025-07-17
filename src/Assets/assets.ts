@@ -318,7 +318,7 @@ export const experience: ExperienceType[] = [
     {
         role: "Freelance Front-End Developer",
         company: "Amin Garage",
-        duration: "January 2023 – Present",
+        duration: "January 2025 – Present",
         description: [
             "Designed and developed a fully responsive auto service website using React.js, TypeScript, and Tailwind CSS.",
             "Integrated EmailJS for client-side form submissions and email notifications.",
