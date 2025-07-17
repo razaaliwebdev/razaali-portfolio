@@ -464,21 +464,25 @@ export const services: Service[] = [
 
 export type Expect = {
     title: string;
-    description: string
+    description: string;
+    image: string;
 }
 
 export const expectations: Expect[] = [
     {
+        image: whyMe1,
         title: "Personalized Solutions",
         description:
             "I don’t believe in cookie-cutter code. Whether it’s a startup site or a full-stack web app, I tailor every solution to your specific needs using the right tech stack.",
     },
     {
+        image: whyMe2,
         title: "Clear & Consistent Communication",
         description:
             "You'll always know where your project stands. I provide regular updates, transparent timelines, and open collaboration throughout the development process.",
     },
     {
+        image: whyMe3,
         title: "Post-Launch Support",
         description:
             "I stand by my work. After deployment, I offer continued support, minor fixes, and guidance to ensure your app stays secure and up-to-date.",
