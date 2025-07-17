@@ -281,3 +281,54 @@ export const testimonials: Testimonial[] = [
         image: "https://images.unsplash.com/photo-1611637576109-b6f76185ec9b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGJveXN8ZW58MHx8MHx8fDA%3D"
     },
 ];
+
+
+
+
+// ****************** ABOUT PAGE DATA **********************
+export type AboutData = {
+    title: string;
+    description: string;
+};
+
+export const aboutData: AboutData = {
+    title: "Welcome to My Development World",
+    description: "My journey into web development began with curiosity and determination. With no formal degree in computer science, I immersed myself in the MERN stack — learning how to blend logic with creativity to craft modern, scalable web applications.Over time, I’ve built a portfolio of responsive, user-first projects that range from authentication systems and API-integrated dashboards to full-stack applications for real businesses. My goal isn’t just to write code — it’s to create digital experiences that solve real problems and deliver value.What drives me is constant learning, clean code, and a desire to bring ideas to life — from vision to launch."
+};
+
+export type Experience = {
+    role: string;
+    company: string;
+    duration: string;
+    location?: string;
+    description: string[];
+};
+
+export const experience: Experience[] = [
+    {
+        role: "Full Stack Developer",
+        company: "Freelance / Personal Projects",
+        duration: "Jan 2024 – Present",
+        description: [
+            "6+ months of hands-on experience building full-stack web applications using the MERN stack.",
+            "Developed and deployed projects like Amin Garage with modern UI, authentication, and API integrations.",
+            "Worked with tools like Next.js, Tailwind CSS, Redux Toolkit, and ShadCN UI to create responsive and scalable web apps.",
+            "Collaborated with designers and clients to turn ideas into polished, production-ready solutions.",
+        ],
+    },
+];
+
+
+
+
+// ****************** PROJECTS PAGE DATA **********************
+
+
+
+// ****************** SERVICES PAGE DATA **********************
+
+
+
+// ****************** CONTACT PAGE DATA **********************
+
+
