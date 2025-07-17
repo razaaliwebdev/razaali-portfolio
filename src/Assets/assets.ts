@@ -296,27 +296,38 @@ export const aboutData: AboutData = {
     description: "My journey into web development began with curiosity and determination. With no formal degree in computer science, I immersed myself in the MERN stack — learning how to blend logic with creativity to craft modern, scalable web applications.Over time, I’ve built a portfolio of responsive, user-first projects that range from authentication systems and API-integrated dashboards to full-stack applications for real businesses. My goal isn’t just to write code — it’s to create digital experiences that solve real problems and deliver value.What drives me is constant learning, clean code, and a desire to bring ideas to life — from vision to launch."
 };
 
-export type Experience = {
+export type ExperienceType = {
     role: string;
     company: string;
     duration: string;
-    location?: string;
     description: string[];
 };
 
-export const experience: Experience[] = [
+export const experience: ExperienceType[] = [
     {
-        role: "Full Stack Developer",
-        company: "Freelance / Personal Projects",
-        duration: "Jan 2024 – Present",
+        role: "Front-End Web Developer Intern",
+        company: "Leon Advert, Lahore",
+        duration: "June 2022 – November 2022",
         description: [
-            "6+ months of hands-on experience building full-stack web applications using the MERN stack.",
-            "Developed and deployed projects like Amin Garage with modern UI, authentication, and API integrations.",
-            "Worked with tools like Next.js, Tailwind CSS, Redux Toolkit, and ShadCN UI to create responsive and scalable web apps.",
-            "Collaborated with designers and clients to turn ideas into polished, production-ready solutions.",
+            "Built responsive web interfaces using HTML, CSS, and JavaScript.",
+            "Worked closely with senior developers to implement UI components.",
+            "Improved accessibility and performance of web pages.",
+            "Collaborated with designers and marketing teams to fulfill client requirements.",
+        ],
+    },
+    {
+        role: "Freelance Front-End Developer",
+        company: "Amin Garage",
+        duration: "January 2023 – Present",
+        description: [
+            "Designed and developed a fully responsive auto service website using React.js, TypeScript, and Tailwind CSS.",
+            "Integrated EmailJS for client-side form submissions and email notifications.",
+            "Built reusable components and ensured mobile-first design principles.",
+            "Delivered a modern UI with smooth animations and clean user experience.",
         ],
     },
 ];
+
 
 
 
