@@ -196,6 +196,35 @@ export const about: About = {
         "Hello! I’m Raza Ali, a self-taught Full Stack Web Developer specializing in the MERN stack. With a passion for clean code and modern UI/UX, I build dynamic, scalable, and user-focused web applications. My mission is to turn ideas into full-featured digital products that are fast, secure, and responsive — tailored to your specific business goals.",
 };
 
+export type SocialLinkes = {
+    name: string;
+    link: string;
+    icon: "github" | "linkedin" | "twitter" | "facebook";
+};
+
+export const socialLinks: SocialLinkes[] = [
+    {
+        name: "GitHub",
+        link: "https://github.com/razaaliwebdev/",
+        icon: "github",
+    },
+    {
+        name: "LinkedIn",
+        link: "https://www.linkedin.com/in/raza-webdev/",
+        icon: "linkedin",
+    },
+    {
+        name: "Twitter",
+        link: "https://x.com/razaaliwebdev",
+        icon: 'twitter',
+    },
+    {
+        name: "Facebook",
+        link: "https://web.facebook.com/?_rdc=1&_rdr",
+        icon: 'facebook',
+    },
+];
+
 
 // By The Number  / Stat
 export type Stat = {
