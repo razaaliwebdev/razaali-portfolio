@@ -1,5 +1,6 @@
 import { assets } from "@/Assets/assets";
 import HeroSection from "@/components/sections/HeroSection";
+import MyProcess from "@/components/sections/MyProcess";
 import ProjectsSection from "@/components/sections/ProjectsSection";
 import WhyWorkWithMe from "@/components/sections/WhyWorkWithMe";
 import Image from "next/image";
@@ -10,6 +11,7 @@ export default function Home() {
       <HeroSection />
       <WhyWorkWithMe />
       <ProjectsSection />
+      <MyProcess />
     </div>
   );
 }
