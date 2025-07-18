@@ -244,12 +244,12 @@ export type Stat = {
 
 export const byTheNumber: Stat[] = [
     {
-        value: "05+",
+        value: "01",
         label: "Years of Experience",
         description: "Delivering production-grade web applications that scale.",
     },
     {
-        value: "50+",
+        value: "01",
         label: "Projects Delivered",
         description: "From landing pages to full-stack platforms, delivered with quality and speed.",
     },
