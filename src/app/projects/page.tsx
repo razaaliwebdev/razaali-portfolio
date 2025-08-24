@@ -5,6 +5,15 @@ import { projects } from "@/Assets/assets";
 import ProjectCard from "@/components/shared/ProjectCard";
 import FaqSection from "@/components/projects/FaqSection";
 
+// app/projects/page.tsx
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Projects | Raza Ali - Web Developer Portfolio",
+  description:
+    "Browse projects by Raza Ali showcasing expertise in MERN Stack, Next.js, and modern full stack web development.",
+};
+
 const categories = ["All", "Frontend", "Backend", "Full Stack"];
 
 const ProjectsPage = () => {

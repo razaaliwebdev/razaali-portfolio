@@ -2,6 +2,14 @@ import ContactForm from "@/components/contact/ContactForm";
 import FindMe from "@/components/contact/FindMe";
 import FaqSection from "@/components/projects/FaqSection";
 import React from "react";
+// app/contact/page.tsx
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact | Raza Ali - Web Developer",
+  description:
+    "Get in touch with Raza Ali for collaboration, freelance projects, or job opportunities in full stack web development.",
+};
 
 const page = () => {
   return (
