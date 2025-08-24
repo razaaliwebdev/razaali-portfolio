@@ -104,7 +104,7 @@ export default function RootLayout({
               url: "https://razaali-portfolio.onrender.com",
               sameAs: [
                 "https://github.com/razaaliwebdev",
-                "https://linkedin.com/in/raza-webdev",
+                "https://www.linkedin.com/in/raza-webdev",
               ],
               knowsAbout: ["MERN Stack", "Next.js", "Web Development"],
             }),
