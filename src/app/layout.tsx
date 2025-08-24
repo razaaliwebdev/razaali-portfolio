@@ -92,6 +92,25 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Raza Ali",
+              jobTitle: "Full Stack Developer",
+              url: "https://razaali-portfolio.onrender.com",
+              sameAs: [
+                "https://github.com/razaaliwebdev",
+                "https://linkedin.com/in/raza-webdev",
+              ],
+              knowsAbout: ["MERN Stack", "Next.js", "Web Development"],
+            }),
+          }}
+        />
+      </head>
       <body className={`${outfit.className} font-sans antialiased`}>
         <Navbar />
         <ScrollToTop />
