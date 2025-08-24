@@ -12,6 +12,7 @@ import hero from './hero.webp';
 import mobile from './mobile-mockup.svg';
 import minusIcon from './Minus-Icon.svg';
 import plusIcon from './Plus-Icon.svg';
+// import adnan from './adnan.jpg';
 
 
 export const assets = {
@@ -279,7 +280,7 @@ export const testimonials: Testimonial[] = [
         name: "Adnan Amin",
         position: "Co.Founder",
         company: "WB DigiTech",
-        image: "https://images.unsplash.com/photo-1592046285097-6cdf4daf0d69?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Ym95c3xlbnwwfHwwfHx8MA%3D%3D"
+        image: "/images/adnan.jpg"
     },
     {
         quote:
