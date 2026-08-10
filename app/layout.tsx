@@ -66,7 +66,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${jetbrainsMono.variable} ${firaCode.variable} dark h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-mono">
-        <BootSplash duration={5000} />
+        <BootSplash />
         {children}
       </body>
     </html>

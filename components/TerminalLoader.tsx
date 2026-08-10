@@ -43,7 +43,7 @@ function buildBar(progress: number, blocks: number) {
 
 export default function TerminalLoader({
   blocks = 24,
-  duration = 2200,
+  duration = 2000,
   autoDismiss = false,
   onDismiss,
   className = "",
@@ -170,7 +170,6 @@ export default function TerminalLoader({
 
               {/* Flat ASCII bar — filled blocks use primary */}
               <pre className="m-0 select-none font-mono text-base leading-none tracking-tight text-foreground sm:text-lg">
-                <span aria-hidden>&apos;</span>
                 <span>[</span>
                 <span className="text-primary">
                   {bar.filled}
@@ -179,7 +178,6 @@ export default function TerminalLoader({
                 <span className="text-foreground-muted">{bar.empty}</span>
                 <span>]</span>
                 <span> {percent}%</span>
-                <span aria-hidden>&quot;</span>
               </pre>
             </div>
           </motion.div>
@@ -192,7 +190,7 @@ export default function TerminalLoader({
 /** First-visit splash overlay for the root layout */
 export function BootSplash({
   blocks = 24,
-  duration = 5000,
+  duration = 2000,
 }: Pick<TerminalLoaderProps, "blocks" | "duration">) {
   const [show, setShow] = useState(true);
 

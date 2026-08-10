@@ -5,5 +5,5 @@ import TerminalLoader from "@/components/TerminalLoader";
  * autoDismiss stays off; Next.js unmounts this when the segment is ready.
  */
 export default function Loading() {
-  return <TerminalLoader blocks={24} duration={5000} />;
+  return <TerminalLoader blocks={24} duration={2000} />;
 }
