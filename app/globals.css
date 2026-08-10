@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0d1117;
-  --background-panel: #161b22;
+  --background: #0b0e14;
+  --background-panel: #12161e;
   --foreground: #e6edf3;
   --foreground-muted: #8b949e;
 
@@ -34,7 +34,8 @@
   --color-danger: var(--color-danger);
 
   --font-sans: var(--font-jetbrains-mono);
-  --font-mono: var(--font-fira-code);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-code: var(--font-victor-mono);
 }
 
 body {
@@ -123,6 +124,61 @@ body {
   background-image: radial-gradient(var(--border) 1px, transparent 1px);
   background-size: 24px 24px;
   opacity: 0.05;
+}
+
+/* ============ HERO LINE GRID (full-bleed) ============ */
+.hero-line-grid {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, #8b949e 5%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, #8b949e 5%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(
+    ellipse 75% 65% at 50% 0%,
+    #000 55%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 75% 65% at 50% 0%,
+    #000 55%,
+    transparent 100%
+  );
+}
+
+/* ============ AYU MIRAGE (hero code windows) ============ */
+.ayu-mirage {
+  --ayu-bg: #1f2430;
+  --ayu-ui: #242936;
+  --ayu-fg: #cbccc6;
+}
+
+.ayu-kw {
+  color: #ffae57;
+}
+.ayu-type {
+  color: #ffd580;
+}
+.ayu-const {
+  color: #d4bfff;
+}
+.ayu-prop {
+  color: #73d0ff;
+}
+.ayu-str {
+  color: #bae67e;
+}
+.ayu-op {
+  color: #f29e74;
+}
+.ayu-punct {
+  color: #5ccfe6;
 }
 
 /* ============ BLINKING CURSOR ============ */

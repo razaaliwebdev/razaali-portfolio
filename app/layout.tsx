@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Fira_Code } from "next/font/google";
+import { JetBrains_Mono, Victor_Mono } from "next/font/google";
 import { BootSplash } from "@/components/TerminalLoader";
 import "./globals.css";
 import Header from "@/components/layout/Header";
@@ -10,8 +10,8 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "700"],
 });
 
-const firaCode = Fira_Code({
-  variable: "--font-fira-code",
+const victorMono = Victor_Mono({
+  variable: "--font-victor-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
 });
@@ -57,14 +57,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport = {
-  themeColor: "#0d1117",
+  themeColor: "#0b0e14",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${jetbrainsMono.variable} ${firaCode.variable} dark h-full antialiased`}
+      className={`${jetbrainsMono.variable} ${victorMono.variable} dark h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-mono">
         <BootSplash />
