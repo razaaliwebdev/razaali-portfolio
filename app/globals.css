@@ -43,23 +43,76 @@ body {
   font-family: var(--font-mono), "Fira Code", monospace;
 }
 
-@layer {
+@layer base {
   button {
     cursor: pointer;
   }
 }
 
+/* ============ BRUTALIST OFFSET BUTTON (CTAs only) ============ */
+.btn {
+  --btn-offset: 5px;
+  --btn-bg: var(--color-primary);
+  --btn-fg: var(--color-neutral);
+  --btn-line: var(--color-primary);
+
+  position: relative;
+  z-index: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
+  border: none;
+  border-radius: 0;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  padding: 0.4rem 1.5rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 1.5px solid var(--btn-line);
+  border-radius: 0;
+  transform: translate(calc(var(--btn-offset) * -1), var(--btn-offset));
+  transition: transform 0.2s ease;
+  pointer-events: none;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  transform: translate(calc(var(--btn-offset) * -1), var(--btn-offset));
+  outline: none;
+}
+
+.btn:hover::after,
+.btn:focus-visible::after {
+  transform: translate(0, 0);
+}
+
+.btn:active {
+  transform: translate(calc(var(--btn-offset) * -1), var(--btn-offset));
+}
+
 /* ============ SCROLLBAR ============ */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 6px;
+  border-radius: 0;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-primary);

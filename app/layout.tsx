@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { JetBrains_Mono, Fira_Code } from "next/font/google";
 import { BootSplash } from "@/components/TerminalLoader";
 import "./globals.css";
+import Header from "@/components/layout/Header";
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
@@ -67,6 +68,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-mono">
         <BootSplash />
+        <Header />
         {children}
       </body>
     </html>
