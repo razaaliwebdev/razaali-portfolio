@@ -1,0 +1,16 @@
+{
+  "name": "Raza Ali — Portfolio",
+  "short_name": "Raza Ali",
+  "description": "Portfolio of Raza Ali, Full Stack Developer specializing in MERN / PERN.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
