@@ -3,13 +3,19 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
-const BOOT_LINES = [
-  "$ initializing_portfolio.sh",
-  "$ loading assets...",
-  "$ compiling components...",
-  "$ syncing theme tokens...",
-  "$ ready.",
+const RESOLVE_STEPS = [
+  "resolving react@19.0.0",
+  "resolving node@20.x",
+  "resolving postgresql-client",
+  "resolving typescript@5.x",
 ] as const;
+
+/** Classic macOS window control colors */
+const MAC_DOTS = {
+  close: "#FF5F57",
+  minimize: "#FEBC2E",
+  maximize: "#28C840",
+} as const;
 
 export type TerminalLoaderProps = {
   /** Total unicode block characters between the brackets */
@@ -50,15 +56,16 @@ export default function TerminalLoader({
 }: TerminalLoaderProps) {
   const reduceMotion = useReducedMotion();
   const [progress, setProgress] = useState(0);
-  const [bootIndex, setBootIndex] = useState(0);
-  const [typedLen, setTypedLen] = useState(0);
   const [done, setDone] = useState(false);
   const [visible, setVisible] = useState(true);
+  const [elapsedSec, setElapsedSec] = useState(0);
 
+  // Same progress animation as before
   useEffect(() => {
     if (reduceMotion) {
       setProgress(1);
       setDone(true);
+      setElapsedSec(duration / 1000);
       return;
     }
 
@@ -75,11 +82,13 @@ export default function TerminalLoader({
 
       const t = Math.min(1, elapsed / duration);
       setProgress(easeOutQuint(t));
+      setElapsedSec(Math.max(0, elapsed) / 1000);
 
       if (t < 1) {
         frame = requestAnimationFrame(tick);
       } else {
         setProgress(1);
+        setElapsedSec(duration / 1000);
         setDone(true);
       }
     };
@@ -87,33 +96,6 @@ export default function TerminalLoader({
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
   }, [duration, reduceMotion]);
-
-  useEffect(() => {
-    if (done) return;
-    const id = window.setInterval(() => {
-      setBootIndex((i) => (i + 1) % BOOT_LINES.length);
-    }, 720);
-    return () => window.clearInterval(id);
-  }, [done]);
-
-  useEffect(() => {
-    const full = done ? "$ done." : BOOT_LINES[bootIndex];
-    setTypedLen(0);
-
-    if (reduceMotion) {
-      setTypedLen(full.length);
-      return;
-    }
-
-    let i = 0;
-    const id = window.setInterval(() => {
-      i += 1;
-      setTypedLen(i);
-      if (i >= full.length) window.clearInterval(id);
-    }, 18);
-
-    return () => window.clearInterval(id);
-  }, [bootIndex, done, reduceMotion]);
 
   useEffect(() => {
     if (!done || !autoDismiss) return;
@@ -124,15 +106,13 @@ export default function TerminalLoader({
 
   const percent = Math.min(100, Math.round(progress * 100));
   const bar = buildBar(progress, blocks);
-  const bootFull = done ? "$ done." : BOOT_LINES[bootIndex];
-  const bootVisible = bootFull.slice(0, typedLen);
 
   return (
     <AnimatePresence onExitComplete={() => onDismiss?.()}>
       {visible && (
         <motion.div
           key="terminal-loader"
-          className={`fixed inset-0 z-50 flex items-center justify-center bg-background ${className}`}
+          className={`fixed inset-0 z-50 flex items-center justify-center bg-background px-4 ${className}`}
           role="status"
           aria-live="polite"
           aria-label={`Loading ${percent}%`}
@@ -150,35 +130,93 @@ export default function TerminalLoader({
           />
 
           <motion.div
-            className="relative w-[min(92vw,28rem)] overflow-hidden rounded-[6px] border border-border bg-background-panel font-mono"
+            className="relative w-[min(92vw,36rem)] overflow-hidden rounded-lg border border-border bg-background-panel font-mono text-[13px] leading-relaxed text-foreground sm:text-sm"
             initial={reduceMotion ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="flex items-center gap-2 border-b border-border px-3 py-2">
-              <span className="size-2.5 rounded-full bg-danger" aria-hidden />
-              <span className="size-2.5 rounded-full bg-secondary" aria-hidden />
-              <span className="size-2.5 rounded-full bg-primary" aria-hidden />
-              <span className="ml-2 text-xs text-foreground-muted">boot.sh</span>
+            {/* macOS title bar */}
+            <div className="relative flex items-center border-b border-border bg-background/40 px-3 py-2.5">
+              <div className="z-10 flex items-center gap-2">
+                <span
+                  className="size-3 rounded-full"
+                  style={{ backgroundColor: MAC_DOTS.close }}
+                  aria-hidden
+                />
+                <span
+                  className="size-3 rounded-full"
+                  style={{ backgroundColor: MAC_DOTS.minimize }}
+                  aria-hidden
+                />
+                <span
+                  className="size-3 rounded-full"
+                  style={{ backgroundColor: MAC_DOTS.maximize }}
+                  aria-hidden
+                />
+              </div>
+              <span className="pointer-events-none absolute inset-x-0 text-center text-xs text-foreground-muted">
+                root@dev-env: ~
+              </span>
             </div>
 
-            <div className="flex flex-col items-center gap-3.5 px-5 py-8 sm:px-8">
-              <p className="flex min-h-[1.25rem] w-full max-w-[22rem] items-baseline justify-center text-sm text-foreground-muted">
-                <span className="truncate">{bootVisible}</span>
-                {!done && <span className="cursor-blink shrink-0" aria-hidden />}
+            <div className="space-y-1 px-4 py-4 sm:px-5 sm:py-5">
+              <p className="text-[11px] text-foreground-muted sm:text-xs">
+                # portfolio · registry: https://registry.npmjs.org/
               </p>
 
-              {/* Flat ASCII bar — filled blocks use primary */}
-              <pre className="m-0 select-none font-mono text-base leading-none tracking-tight text-foreground sm:text-lg">
-                <span>[</span>
-                <span className="text-primary">
-                  {bar.filled}
-                  {bar.partial}
+              <p>
+                <span className="text-foreground-muted">&gt;</span>{" "}
+                <span>npm install razaali.dev</span>
+              </p>
+
+              {/* Static package list — no typing cascade */}
+              <div className="text-foreground-muted">
+                {RESOLVE_STEPS.map((step) => (
+                  <p key={step}>
+                    <span>&gt;</span> {step}
+                  </p>
+                ))}
+              </div>
+
+              {/* Same ASCII progress bar animation */}
+              <pre className="m-0 flex flex-wrap items-center gap-x-2 pt-1 font-mono text-sm leading-none tracking-tight">
+                <span className="text-primary">fetching</span>
+                <span className="text-foreground">
+                  <span>[</span>
+                  <span className="text-primary">
+                    {bar.filled}
+                    {bar.partial}
+                  </span>
+                  <span className="text-foreground-muted">{bar.empty}</span>
+                  <span>]</span>
                 </span>
-                <span className="text-foreground-muted">{bar.empty}</span>
-                <span>]</span>
-                <span> {percent}%</span>
+                <span className="tabular-nums text-foreground">{percent}%</span>
               </pre>
+
+              {done && (
+                <div className="space-y-1 pt-1">
+                  <p className="text-foreground-muted">
+                    <span className="text-primary">✓</span> audited 1 package · 0
+                    vulnerabilities
+                  </p>
+                  <p>added 1 package in {elapsedSec.toFixed(1)}s</p>
+                  <p>
+                    <span className="text-secondary">razaali.dev</span> ready.
+                  </p>
+                  <p className="flex items-center gap-1 pt-2 text-foreground-muted">
+                    <span>&gt;</span>
+                    <span className="inline-block h-3.5 w-2 animate-pulse bg-foreground-muted/70" />
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Status footer */}
+            <div className="flex items-center justify-between border-t border-border px-4 py-2 text-[10px] text-foreground-muted sm:text-[11px]">
+              <span>bash — 80×24</span>
+              <span className="text-primary">
+                {done ? "complete" : "installing…"}
+              </span>
             </div>
           </motion.div>
         </motion.div>
