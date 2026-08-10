@@ -201,7 +201,7 @@ export default function Header() {
             />
 
             <motion.nav
-              className="absolute inset-x-4 top-[4.25rem] overflow-hidden rounded-lg border border-border bg-background-panel font-mono shadow-lg"
+              className="absolute inset-x-4 top-17 overflow-hidden rounded-lg border border-border bg-background-panel font-mono shadow-lg"
               initial={
                 reduceMotion ? false : { opacity: 0, y: -12, scale: 0.98 }
               }
