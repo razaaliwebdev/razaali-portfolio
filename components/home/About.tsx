@@ -71,14 +71,14 @@ export default function About() {
           About Me
         </h2>
 
-        <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)] lg:gap-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)] lg:items-stretch lg:gap-4">
           {/* README */}
-          <article className="flex min-w-0 flex-col overflow-hidden rounded-md border border-border bg-[#0f131a]">
+          <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-md border border-border bg-[#0f131a]">
             <WindowChrome
               title="README.md"
               icon={<FileText className="size-3.5 text-tertiary" aria-hidden />}
             />
-            <div className="flex flex-col gap-4 p-4 font-mono text-[13px] leading-relaxed text-foreground sm:p-5 sm:text-sm">
+            <div className="flex flex-1 flex-col gap-4 p-4 font-mono text-[13px] leading-relaxed text-foreground sm:p-5 sm:text-sm">
               <p>
                 Hello — I&apos;m{" "}
                 <span className="text-primary">Raza Ali</span>, a full stack
@@ -106,7 +106,7 @@ export default function About() {
                 </li>
               </ul>
 
-              <div className="space-y-2 border-t border-border/50 pt-4 text-[12px] text-foreground-muted sm:text-[13px]">
+              <div className="mt-auto space-y-2 border-t border-border/50 pt-4 text-[12px] text-foreground-muted sm:text-[13px]">
                 <p>
                   <span className="text-tertiary">Core Focus:</span> Scalable APIs
                   &amp; React interfaces
@@ -129,10 +129,10 @@ export default function About() {
             </div>
           </article>
 
-          {/* Pixelated profile */}
-          <article className="mx-auto w-full max-w-[20rem] overflow-hidden rounded-md border border-border bg-[#0f131a] lg:mx-0 lg:max-w-none">
+          {/* Pixelated profile — stretches to match README height */}
+          <article className="mx-auto flex h-full w-full max-w-[20rem] flex-col overflow-hidden rounded-md border border-border bg-[#0f131a] lg:mx-0 lg:max-w-none">
             <WindowChrome title="profile.px" />
-            <div className="flex justify-center bg-black">
+            <div className="flex min-h-0 flex-1 items-center justify-center bg-black">
               <PixelatedCanvas
                 src={PROFILE_SRC}
                 width={320}
@@ -153,7 +153,7 @@ export default function About() {
                 objectFit="cover"
                 tintColor="#3fb950"
                 tintStrength={0.12}
-                className="block h-auto w-full max-w-full"
+                className="block h-full max-h-full w-full max-w-full object-contain"
               />
             </div>
           </article>
