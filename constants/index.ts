@@ -13,11 +13,16 @@ const NAV_LINKS: Nav_Links[] = [
   },
   {
     id: 3,
+    title: "services.sh",
+    href: "/services",
+  },
+  {
+    id: 4,
     title: "project.lib",
     href: "/projects",
   },
   {
-    id: 4,
+    id: 5,
     title: "contact.cmd",
     href: "/contact",
   },
