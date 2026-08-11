@@ -43,8 +43,16 @@ function buildBar(progress: number, blocks: number) {
   };
 }
 
+function blocksForWidth(width: number, max: number) {
+  if (width < 360) return Math.min(max, 10);
+  if (width < 400) return Math.min(max, 12);
+  if (width < 480) return Math.min(max, 16);
+  if (width < 640) return Math.min(max, 20);
+  return max;
+}
+
 export default function TerminalLoader({
-  blocks = 24,
+  blocks: blocksProp = 24,
   duration = 2000,
   autoDismiss = false,
   onDismiss,
@@ -56,6 +64,15 @@ export default function TerminalLoader({
   const [visible, setVisible] = useState(true);
   const [minimizing, setMinimizing] = useState(false);
   const [elapsedSec, setElapsedSec] = useState(0);
+  const [blocks, setBlocks] = useState(blocksProp);
+
+  // Fewer ASCII bar blocks on narrow screens to avoid overflow
+  useEffect(() => {
+    const update = () => setBlocks(blocksForWidth(window.innerWidth, blocksProp));
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [blocksProp]);
 
   useEffect(() => {
     if (reduceMotion) {
@@ -118,7 +135,7 @@ export default function TerminalLoader({
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex items-center justify-center overflow-hidden px-4 ${className}`}
+      className={`fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto px-3 py-3 sm:px-4 sm:py-4 ${className}`}
       role="status"
       aria-live="polite"
       aria-label={`Loading ${percent}%`}
@@ -139,9 +156,8 @@ export default function TerminalLoader({
         style={{ opacity: minimizing ? 0 : undefined }}
       />
 
-      {/* Soft dock minimize — scale + sink + fade (no cartoon squash) */}
       <motion.div
-        className="relative w-[min(92vw,36rem)] overflow-hidden rounded-lg border border-border bg-background-panel font-mono text-[13px] leading-relaxed text-foreground will-change-transform sm:text-sm"
+        className="relative flex max-h-[min(88dvh,38rem)] w-full max-w-[34rem] flex-col overflow-hidden rounded-lg border border-border bg-background-panel font-mono text-[12px] leading-relaxed text-foreground will-change-transform sm:text-sm"
         initial={reduceMotion ? false : { opacity: 0, y: 10 }}
         animate={
           minimizing
@@ -168,15 +184,15 @@ export default function TerminalLoader({
         }
         style={{ transformOrigin: "50% 100%" }}
       >
-        <div className="relative flex items-center border-b border-border bg-background/40 px-3 py-2.5">
-          <div className="z-10 flex items-center gap-2">
+        <div className="relative flex shrink-0 items-center border-b border-border bg-background/40 px-3 py-2.5">
+          <div className="z-10 flex items-center gap-1.5 sm:gap-2">
             <span
-              className="size-3 rounded-full"
+              className="size-2.5 rounded-full sm:size-3"
               style={{ backgroundColor: MAC_DOTS.close }}
               aria-hidden
             />
             <motion.span
-              className="size-3 rounded-full"
+              className="size-2.5 rounded-full sm:size-3"
               style={{ backgroundColor: MAC_DOTS.minimize }}
               aria-hidden
               animate={
@@ -194,37 +210,37 @@ export default function TerminalLoader({
               transition={{ duration: 0.4, ease: "easeOut" }}
             />
             <span
-              className="size-3 rounded-full"
+              className="size-2.5 rounded-full sm:size-3"
               style={{ backgroundColor: MAC_DOTS.maximize }}
               aria-hidden
             />
           </div>
-          <span className="pointer-events-none absolute inset-x-0 text-center text-xs text-foreground-muted">
+          <span className="pointer-events-none absolute inset-x-10 truncate text-center text-[11px] text-foreground-muted sm:inset-x-0 sm:text-xs">
             root@dev-env: ~
           </span>
         </div>
 
-        <div className="space-y-1 px-4 py-4 sm:px-5 sm:py-5">
-          <p className="text-[11px] text-foreground-muted sm:text-xs">
+        <div className="min-h-0 flex-1 space-y-1 overflow-y-auto px-3 py-3.5 sm:px-5 sm:py-5">
+          <p className="truncate text-[10px] text-foreground-muted sm:text-xs">
             # portfolio · registry: https://registry.npmjs.org/
           </p>
 
-          <p>
+          <p className="break-all">
             <span className="text-foreground-muted">&gt;</span>{" "}
             <span>npm install razaali.dev</span>
           </p>
 
           <div className="text-foreground-muted">
             {RESOLVE_STEPS.map((step) => (
-              <p key={step}>
+              <p key={step} className="break-all">
                 <span>&gt;</span> {step}
               </p>
             ))}
           </div>
 
-          <pre className="m-0 flex flex-wrap items-center gap-x-2 pt-1 font-mono text-sm leading-none tracking-tight">
-            <span className="text-primary">fetching</span>
-            <span className="text-foreground">
+          <div className="flex min-w-0 items-baseline gap-2 overflow-hidden pt-1 font-mono text-[11px] leading-none tracking-tight sm:text-sm">
+            <span className="shrink-0 text-primary">fetching</span>
+            <span className="min-w-0 overflow-hidden whitespace-nowrap text-foreground">
               <span>[</span>
               <span className="text-primary">
                 {bar.filled}
@@ -233,8 +249,10 @@ export default function TerminalLoader({
               <span className="text-foreground-muted">{bar.empty}</span>
               <span>]</span>
             </span>
-            <span className="tabular-nums text-foreground">{percent}%</span>
-          </pre>
+            <span className="shrink-0 tabular-nums text-foreground">
+              {percent}%
+            </span>
+          </div>
 
           {done && (
             <div className="space-y-1 pt-1">
@@ -254,9 +272,9 @@ export default function TerminalLoader({
           )}
         </div>
 
-        <div className="flex items-center justify-between border-t border-border px-4 py-2 text-[10px] text-foreground-muted sm:text-[11px]">
-          <span>bash — 80×24</span>
-          <span className="text-primary">
+        <div className="flex shrink-0 items-center justify-between gap-2 border-t border-border px-3 py-2 text-[10px] text-foreground-muted sm:px-4 sm:text-[11px]">
+          <span className="truncate">bash — 80×24</span>
+          <span className="shrink-0 text-primary">
             {minimizing ? "minimizing…" : done ? "complete" : "installing…"}
           </span>
         </div>
