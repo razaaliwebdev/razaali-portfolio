@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityCalendar, type Activity } from "react-activity-calendar";
 
 const GITHUB_USER = "razaaliwebdev";
 const JOIN_YEAR = 2024;
-const CALENDAR_MIN_W = "min-w-[52rem]";
 
 const MAC_DOTS = {
   close: "#FF5F57",
@@ -16,6 +15,10 @@ const MAC_DOTS = {
 const THEME = {
   dark: ["#161b22", "#0e4429", "#006d32", "#26a641", "#3fb950"],
 };
+
+/** Base SVG units — `.contrib-heatmap` in globals.css stretches to full width */
+const BASE_BLOCK = 12;
+const BASE_MARGIN = 3;
 
 function computeStats(days: Activity[]) {
   const today = new Date().toISOString().slice(0, 10);
@@ -45,28 +48,33 @@ function computeStats(days: Activity[]) {
   return { longest, current, active, peak };
 }
 
-function CalendarSkeleton() {
+function CalendarSkeleton({ withLabels }: { withLabels: boolean }) {
   return (
-    <div className={`${CALENDAR_MIN_W} space-y-2`} aria-hidden>
-      <div className="flex gap-1 pl-8">
+    <div className="w-full space-y-2" aria-hidden>
+      <div className={`flex gap-1 ${withLabels ? "pl-7" : ""}`}>
         {Array.from({ length: 12 }).map((_, i) => (
           <div
             key={i}
-            className="h-2 flex-1 animate-pulse rounded-sm bg-white/5"
+            className="h-1.5 flex-1 animate-pulse rounded-sm bg-white/5"
           />
         ))}
       </div>
-      <div className="flex gap-2">
-        <div className="flex w-6 flex-col justify-around py-1">
-          <div className="h-2 w-full animate-pulse rounded-sm bg-white/5" />
-          <div className="h-2 w-full animate-pulse rounded-sm bg-white/5" />
-          <div className="h-2 w-full animate-pulse rounded-sm bg-white/5" />
-        </div>
-        <div className="grid flex-1 grid-cols-[repeat(53,minmax(0,1fr))] gap-[3px]">
+      <div className="flex gap-1.5">
+        {withLabels ? (
+          <div className="flex w-5 shrink-0 flex-col justify-around py-0.5">
+            <div className="h-1.5 w-full animate-pulse rounded-sm bg-white/5" />
+            <div className="h-1.5 w-full animate-pulse rounded-sm bg-white/5" />
+            <div className="h-1.5 w-full animate-pulse rounded-sm bg-white/5" />
+          </div>
+        ) : null}
+        <div
+          className="grid w-full gap-0.5"
+          style={{ gridTemplateColumns: "repeat(53, minmax(0, 1fr))" }}
+        >
           {Array.from({ length: 53 * 7 }).map((_, i) => (
             <div
               key={i}
-              className="aspect-square animate-pulse rounded-[2px] bg-white/5"
+              className="aspect-square animate-pulse rounded-[1px] bg-white/5"
             />
           ))}
         </div>
@@ -90,6 +98,20 @@ export default function Contributions() {
   const [error, setError] = useState(false);
 
   const stats = useMemo(() => (data ? computeStats(data) : null), [data]);
+  const calendarRef = useRef<HTMLDivElement>(null);
+  const [showWeekdayLabels, setShowWeekdayLabels] = useState(true);
+
+  useEffect(() => {
+    const el = calendarRef.current;
+    if (!el) return;
+
+    const update = () => setShowWeekdayLabels(el.clientWidth >= 340);
+    update();
+
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [data]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -133,7 +155,7 @@ export default function Contributions() {
   return (
     <section
       id="contributions"
-      className="relative w-full border-t border-border/40 py-10 lg:py-12"
+      className="relative w-full border-t border-border/40 py-10 [overflow-anchor:none] lg:py-12"
       aria-labelledby="contributions-heading"
     >
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
@@ -141,12 +163,12 @@ export default function Contributions() {
         <div className="hero-line-grid absolute inset-0 opacity-40" />
       </div>
 
-      <div className="relative w-full px-6 md:px-12 lg:px-24">
+      <div className="relative w-full px-4 md:px-12 lg:px-24">
         {/* Terminal window */}
         <div className="overflow-hidden rounded-lg border border-border bg-[#0f131a] font-mono shadow-[0_16px_40px_rgba(0,0,0,0.35)]">
           {/* Title bar */}
-          <div className="relative flex items-center border-b border-border bg-[#1a1f2a] px-3 py-2.5">
-            <div className="z-10 flex items-center gap-1.5">
+          <div className="flex items-center gap-2.5 border-b border-border bg-[#1a1f2a] px-3 py-2.5">
+            <div className="flex shrink-0 items-center gap-1.5">
               <span
                 className="size-2.5 rounded-full"
                 style={{ backgroundColor: MAC_DOTS.close }}
@@ -163,9 +185,13 @@ export default function Contributions() {
                 aria-hidden
               />
             </div>
-            <span className="pointer-events-none absolute inset-x-10 truncate text-center text-[11px] text-foreground-muted sm:inset-x-0 sm:text-xs">
+            <span className="min-w-0 flex-1 truncate text-[11px] text-foreground-muted sm:text-center sm:text-xs">
               bash — git@github:{GITHUB_USER}/contributions
             </span>
+            <div
+              className="hidden w-[calc(0.625rem*3+0.375rem*2)] shrink-0 sm:block"
+              aria-hidden
+            />
           </div>
 
           {/* Command line */}
@@ -197,7 +223,7 @@ export default function Contributions() {
             </p>
           </div>
 
-          {/* Mobile year select as shell flags */}
+          {/* Mobile year select */}
           <div
             className="flex flex-wrap gap-1.5 border-b border-border/50 px-3 py-2 sm:hidden"
             role="tablist"
@@ -227,40 +253,72 @@ export default function Contributions() {
             })}
           </div>
 
-          <div className="flex w-full items-stretch">
-            {/* Heatmap pane */}
-            <div
-              className={`shrink-0 overflow-x-auto p-3 sm:p-4 [scrollbar-width:thin] ${CALENDAR_MIN_W}`}
-            >
+          <div className="flex w-full min-w-0 flex-col sm:flex-row sm:items-stretch">
+            {/* Heatmap — CSS-scaled to full pane width */}
+            <div className="min-w-0 flex-1 p-3 sm:p-4">
               <p className="mb-2 text-[10px] text-foreground-muted">
                 <span className="text-secondary">cat</span> ./heatmap/{year}
                 .svg
               </p>
               <div
-                className={`text-foreground-muted transition-opacity duration-200 [&_text]:fill-[#8b949e] ${
-                  loading ? "opacity-50" : "opacity-100"
-                }`}
+                ref={calendarRef}
+                className={`contrib-heatmap text-foreground-muted transition-opacity duration-200 [&_text]:fill-[#8b949e] ${
+                  showWeekdayLabels ? "contrib-heatmap--labels" : ""
+                } ${loading ? "opacity-50" : "opacity-100"}`}
               >
                 {data ? (
                   <ActivityCalendar
+                    key={year}
                     data={data}
                     colorScheme="dark"
                     theme={THEME}
-                    blockSize={12}
-                    blockMargin={4}
-                    fontSize={12}
-                    showWeekdayLabels
+                    blockSize={BASE_BLOCK}
+                    blockMargin={BASE_MARGIN}
+                    blockRadius={2}
+                    fontSize={11}
+                    showWeekdayLabels={showWeekdayLabels}
                     showTotalCount={false}
                     showColorLegend={false}
                   />
                 ) : (
-                  <CalendarSkeleton />
+                  <CalendarSkeleton withLabels={showWeekdayLabels} />
                 )}
+              </div>
+
+              {/* Mobile stats — tight under heatmap */}
+              <div className="mt-3 space-y-1 border-t border-border/40 pt-2.5 text-[11px] sm:hidden">
+                <p className="mb-1.5 text-[10px] text-foreground-muted">
+                  <span className="text-secondary">source</span> ./stats.env
+                </p>
+                {stats ? (
+                  <>
+                    <p>
+                      <span className="text-secondary">export</span>{" "}
+                      <span className="text-tertiary">STREAK</span>=
+                      <span className="text-primary">{stats.current}</span>
+                    </p>
+                    <p>
+                      <span className="text-secondary">export</span>{" "}
+                      <span className="text-tertiary">LONGEST</span>=
+                      <span className="text-foreground">{stats.longest}</span>
+                    </p>
+                    <p>
+                      <span className="text-secondary">export</span>{" "}
+                      <span className="text-tertiary">ACTIVE_DAYS</span>=
+                      <span className="text-foreground">{stats.active}</span>
+                    </p>
+                    <p>
+                      <span className="text-secondary">export</span>{" "}
+                      <span className="text-tertiary">BEST_DAY</span>=
+                      <span className="text-foreground">{stats.peak}</span>
+                    </p>
+                  </>
+                ) : null}
               </div>
             </div>
 
-            {/* Stats as shell exports */}
-            <div className="hidden min-w-0 flex-1 flex-col justify-center border-l border-border/50 bg-[#0c1018] px-4 py-3 sm:flex lg:px-5">
+            {/* Stats — desktop */}
+            <div className="hidden min-w-0 w-[12rem] shrink-0 flex-col justify-center border-l border-border/50 bg-[#0c1018] px-3 py-3 sm:flex lg:w-[14rem] lg:px-4">
               <p className="mb-3 text-[10px] text-foreground-muted">
                 <span className="text-secondary">source</span> ./stats.env
               </p>
@@ -301,7 +359,7 @@ export default function Contributions() {
                     {Array.from({ length: 4 }).map((_, i) => (
                       <div
                         key={i}
-                        className="h-3 w-40 animate-pulse rounded-sm bg-white/5"
+                        className="h-3 w-36 animate-pulse rounded-sm bg-white/5"
                       />
                     ))}
                   </div>
@@ -309,7 +367,7 @@ export default function Contributions() {
               </div>
             </div>
 
-            {/* Year checkout pane */}
+            {/* Year pane — desktop */}
             <div
               className="hidden w-[5.5rem] shrink-0 flex-col border-l border-border/50 bg-[#0c1018] p-2 sm:flex lg:w-24"
               role="tablist"
@@ -345,7 +403,7 @@ export default function Contributions() {
           </div>
 
           {/* Status bar */}
-          <div className="flex items-center justify-between gap-3 border-t border-border bg-[#1a1f2a] px-3 py-2 text-[10px] text-foreground-muted sm:px-4 sm:text-[11px]">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border bg-[#1a1f2a] px-3 py-2 text-[10px] text-foreground-muted sm:gap-3 sm:px-4 sm:text-[11px]">
             <span>
               <span className="text-primary">✓</span> exit 0
             </span>
@@ -353,9 +411,9 @@ export default function Contributions() {
               href={`https://github.com/${GITHUB_USER}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="truncate transition-colors hover:text-primary"
+              className="max-w-[60%] truncate transition-colors hover:text-primary sm:max-w-none"
             >
-              open https://github.com/{GITHUB_USER}
+              open github.com/{GITHUB_USER}
             </a>
             <span className="hidden sm:inline">
               Less

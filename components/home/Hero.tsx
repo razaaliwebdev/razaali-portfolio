@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { GitBranch, FolderOpen } from "lucide-react";
 import CommitCount from "@/components/home/CommitCount";
+import SkillsMarquee from "@/components/home/SkillsMarquee";
 
 const MAC_DOTS = {
   close: "#FF5F57",
@@ -383,6 +384,8 @@ function HeroIntro({ reduceMotion }: { reduceMotion: boolean | null }) {
           </span>
         </div>
       </div>
+
+      <SkillsMarquee />
     </div>
   );
 }

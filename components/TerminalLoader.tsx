@@ -289,6 +289,16 @@ export function BootSplash({
 }: Pick<TerminalLoaderProps, "blocks" | "duration">) {
   const [show, setShow] = useState(true);
 
+  // Prevent browser restoring mid-page scroll (looks like a jump to contributions)
+  useEffect(() => {
+    const prev = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    return () => {
+      window.history.scrollRestoration = prev;
+    };
+  }, []);
+
   if (!show) return null;
 
   return (
@@ -296,7 +306,10 @@ export function BootSplash({
       blocks={blocks}
       duration={duration}
       autoDismiss
-      onDismiss={() => setShow(false)}
+      onDismiss={() => {
+        setShow(false);
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      }}
     />
   );
 }

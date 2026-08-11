@@ -152,6 +152,97 @@ body {
   );
 }
 
+/* ============ CONTRIBUTIONS HEATMAP (fill desktop width) ============ */
+.contrib-heatmap {
+  width: 100%;
+}
+
+.contrib-heatmap--labels {
+  padding-left: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .contrib-heatmap--labels {
+    padding-left: 1.75rem;
+  }
+}
+
+/* Library sets width:max-content inline — must override to stretch on desktop */
+.contrib-heatmap .react-activity-calendar {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.contrib-heatmap .react-activity-calendar__scroll-container {
+  width: 100% !important;
+  max-width: none !important;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+}
+
+.contrib-heatmap .react-activity-calendar__calendar {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  margin-left: 0 !important;
+}
+
+/* ============ HERO SKILLS MARQUEE ============ */
+.skills-marquee__viewport {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+}
+
+.skills-marquee__viewport--static {
+  overflow-x: auto;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.skills-marquee__viewport--static .skills-marquee__rail {
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
+  row-gap: 0.75rem;
+}
+
+.skills-marquee__rail--scroll {
+  animation: skills-marquee-scroll 42s linear infinite;
+}
+
+.skills-marquee__viewport:hover .skills-marquee__rail--scroll,
+.skills-marquee__viewport:focus-within .skills-marquee__rail--scroll {
+  animation-play-state: paused;
+}
+
+@keyframes skills-marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skills-marquee__rail--scroll {
+    animation: none;
+  }
+}
+
 /* ============ AYU MIRAGE (hero code windows) ============ */
 .ayu-mirage {
   --ayu-bg: #1f2430;
