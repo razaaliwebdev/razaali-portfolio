@@ -9,7 +9,7 @@ const NAV_LINKS: Nav_Links[] = [
   {
     id: 2,
     title: "skills.json",
-    href: "/skills",
+    href: "/#skills",
   },
   {
     id: 3,

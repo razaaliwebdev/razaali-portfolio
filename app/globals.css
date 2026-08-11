@@ -193,15 +193,15 @@ body {
   -webkit-mask-image: linear-gradient(
     to right,
     transparent,
-    #000 8%,
-    #000 92%,
+    #000 6%,
+    #000 94%,
     transparent
   );
   mask-image: linear-gradient(
     to right,
     transparent,
-    #000 8%,
-    #000 92%,
+    #000 6%,
+    #000 94%,
     transparent
   );
 }
@@ -216,11 +216,14 @@ body {
   flex-wrap: wrap;
   width: 100%;
   max-width: 100%;
-  row-gap: 0.75rem;
+  justify-content: flex-start;
+  row-gap: 0.35rem;
+  padding-inline: 0.5rem;
 }
 
 .skills-marquee__rail--scroll {
-  animation: skills-marquee-scroll 42s linear infinite;
+  animation: skills-marquee-scroll 48s linear infinite;
+  will-change: transform;
 }
 
 .skills-marquee__viewport:hover .skills-marquee__rail--scroll,
@@ -241,6 +244,18 @@ body {
   .skills-marquee__rail--scroll {
     animation: none;
   }
+}
+
+/* Hatched track for CLI-style skill meters */
+.skills-meter__track {
+  background-color: #0b0e14;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in srgb, var(--color-primary) 45%, transparent) 1px,
+    transparent 1.2px
+  );
+  background-size: 4px 4px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 28%, transparent);
 }
 
 /* ============ AYU MIRAGE (hero code windows) ============ */

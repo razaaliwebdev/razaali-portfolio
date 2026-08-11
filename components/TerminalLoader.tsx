@@ -289,11 +289,13 @@ export function BootSplash({
 }: Pick<TerminalLoaderProps, "blocks" | "duration">) {
   const [show, setShow] = useState(true);
 
-  // Prevent browser restoring mid-page scroll (looks like a jump to contributions)
+  // Prevent browser restoring mid-page scroll, but honor hash deep-links (#skills)
   useEffect(() => {
     const prev = window.history.scrollRestoration;
     window.history.scrollRestoration = "manual";
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    if (!window.location.hash) {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
     return () => {
       window.history.scrollRestoration = prev;
     };
@@ -308,6 +310,15 @@ export function BootSplash({
       autoDismiss
       onDismiss={() => {
         setShow(false);
+        const hash = window.location.hash;
+        if (hash) {
+          requestAnimationFrame(() => {
+            document
+              .querySelector(hash)
+              ?.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+          return;
+        }
         window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       }}
     />

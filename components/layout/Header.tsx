@@ -6,6 +6,17 @@ import { Menu, SquareTerminal, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { NAV_LINKS } from "@/constants";
 
+function scrollToHash(href: string) {
+  if (!href.includes("#")) return false;
+  const id = href.split("#")[1];
+  if (!id) return false;
+  const el = document.getElementById(id);
+  if (!el) return false;
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+  window.history.pushState(null, "", `/#${id}`);
+  return true;
+}
+
 function TypedText({
   title,
   delay,
@@ -64,7 +75,10 @@ function TypedLink({
   return (
     <Link
       href={href}
-      onClick={onNavigate}
+      onClick={(e) => {
+        if (scrollToHash(href)) e.preventDefault();
+        onNavigate();
+      }}
       className="group flex items-baseline gap-2 py-2 text-lg text-foreground-muted transition-colors duration-300 hover:text-primary"
     >
       <span className="text-primary">$</span>
@@ -123,6 +137,9 @@ export default function Header() {
             <Link
               key={link.id}
               href={link.href}
+              onClick={(e) => {
+                if (scrollToHash(link.href)) e.preventDefault();
+              }}
               className="text-sm text-foreground-muted transition-colors duration-300 hover:text-foreground"
             >
               {link.title}
