@@ -4,7 +4,7 @@ const NAV_LINKS: Nav_Links[] = [
   {
     id: 1,
     title: "about.sh",
-    href: "/about",
+    href: "/#about",
   },
   {
     id: 2,
