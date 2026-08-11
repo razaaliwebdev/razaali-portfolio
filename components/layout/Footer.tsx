@@ -26,39 +26,34 @@ function LinkedInIcon({ className }: { className?: string }) {
   );
 }
 
-function MailIcon({ className }: { className?: string }) {
+function XIcon({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      fill="currentColor"
       className={className}
       aria-hidden
     >
-      <rect width="20" height="16" x="2" y="4" rx="2" />
-      <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z" />
     </svg>
   );
 }
 
 const SOCIAL = [
   {
-    label: "github",
+    label: "GitHub",
     href: "https://github.com/razaaliwebdev",
     icon: GitHubIcon,
   },
   {
-    label: "linkedin",
+    label: "LinkedIn",
     href: "https://www.linkedin.com/in/razaaliwebdev/",
     icon: LinkedInIcon,
   },
   {
-    label: "email",
-    href: "mailto:razaali.webdev@gmail.com",
-    icon: MailIcon,
+    label: "X",
+    href: "https://x.com/razaaliwebdev",
+    icon: XIcon,
   },
 ] as const;
 
@@ -72,20 +67,20 @@ export default function Footer() {
       />
 
       {/* status rail */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-border/40 px-6 py-2 text-[10px] tracking-wide text-foreground-muted md:px-12 lg:px-24">
+      <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 border-b border-border/40 px-6 py-2 text-[10px] tracking-wide text-foreground-muted sm:justify-between md:px-12 lg:px-24">
         <span className="inline-flex items-center gap-1.5">
           <span className="size-1.5 rounded-full bg-primary shadow-[0_0_6px_var(--color-primary)]" />
           <span className="text-primary">online</span>
         </span>
         <span className="hidden sm:inline">lahore · utc+5</span>
         <span className="hidden md:inline">pid:portfolio</span>
-        <span className="ml-auto font-medium text-foreground/70">
+        <span className="font-medium text-foreground/70 sm:ml-auto">
           razaaliwebdev
         </span>
       </div>
 
       {/* main row */}
-      <div className="flex flex-col gap-5 px-6 py-6 sm:py-7 md:flex-row md:items-center md:justify-between md:gap-8 md:px-12 lg:px-24">
+      <div className="flex flex-col items-center gap-5 px-6 py-6 text-center sm:py-7 md:flex-row md:items-center md:justify-between md:gap-8 md:px-12 md:text-left lg:px-24">
         <div className="space-y-1">
           <p className="text-xs text-foreground-muted sm:text-[13px]">
             <span className="text-foreground/80">© {YEAR}</span>{" "}
@@ -100,7 +95,7 @@ export default function Footer() {
 
         {/* live prompt — unique centerpiece */}
         <div
-          className="order-first flex items-center gap-1.5 self-start rounded-sm border border-border/50 bg-[#0f131a] px-3 py-2 text-xs md:order-none md:self-auto sm:text-[13px]"
+          className="order-first flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 rounded-sm border border-border/50 bg-[#0f131a] px-3 py-2 text-xs md:order-none sm:text-[13px]"
           aria-hidden
         >
           <span className="text-primary">visitor</span>
@@ -116,27 +111,19 @@ export default function Footer() {
         </div>
 
         <nav
-          className="flex flex-wrap items-center gap-1 sm:gap-2"
+          className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 md:justify-end"
           aria-label="Social"
         >
           {SOCIAL.map(({ label, href, icon: Icon }) => (
             <a
               key={label}
               href={href}
-              target={href.startsWith("mailto:") ? undefined : "_blank"}
-              rel={
-                href.startsWith("mailto:") ? undefined : "noopener noreferrer"
-              }
-              className="group inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-foreground-muted transition-colors hover:text-primary sm:text-[13px]"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              className="inline-flex items-center justify-center p-2 text-foreground-muted transition-colors hover:text-primary"
             >
-              <Icon
-                className="size-3.5 opacity-70 transition-opacity group-hover:opacity-100"
-                aria-hidden
-              />
-              <span className="relative">
-                {label}
-                <span className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-primary transition-transform duration-200 group-hover:scale-x-100" />
-              </span>
+              <Icon className="size-4" aria-hidden />
             </a>
           ))}
         </nav>
