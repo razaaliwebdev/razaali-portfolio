@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { Mail, Send, Terminal } from "lucide-react";
+import { ArrowLeft, Mail, Send } from "lucide-react";
 
 const EMAIL = "razaali.webdev@gmail.com";
 
@@ -56,49 +56,47 @@ const SOCIAL = [
   },
 ] as const;
 
-type FieldName = "name" | "email" | "message";
-
-function PromptLabel({ children }: { children: string }) {
-  return (
-    <span className="shrink-0 select-none">
-      <span className="text-primary">visitor@razaali.dev</span>
-      <span className="text-foreground-muted">:~$</span>{" "}
-      <span className="text-tertiary">{children}</span>{" "}
-      <span className="text-foreground-muted">&gt;</span>
-    </span>
-  );
-}
+const DETAILS = [
+  {
+    label: "Email",
+    value: (
+      <a
+        href={`mailto:${EMAIL}`}
+        className="break-all text-primary transition-colors hover:text-primary-bright"
+      >
+        {EMAIL}
+      </a>
+    ),
+  },
+  { label: "Based in", value: "Lahore, Pakistan · Remote OK" },
+  { label: "Timezone", value: "Pakistan Standard Time (UTC+5)" },
+  {
+    label: "Availability",
+    value: (
+      <span className="inline-flex items-center gap-2 text-primary">
+        <span className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--color-primary)]" />
+        Open to new work
+      </span>
+    ),
+  },
+] as const;
 
 export default function ContactView() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [active, setActive] = useState<FieldName | null>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle",
   );
   const [error, setError] = useState<string | null>(null);
 
-  const loginLine = useMemo(() => {
-    const now = new Date();
-    return now.toLocaleString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true,
-    });
-  }, []);
-
   function validate() {
-    if (!name.trim()) return "name is required";
+    if (!name.trim()) return "Please enter your name.";
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return "valid email is required";
+      return "Please enter a valid email address.";
     }
     if (!message.trim() || message.trim().length < 8) {
-      return "message must be at least 8 characters";
+      return "Please write a short message (at least a sentence).";
     }
     return null;
   }
@@ -115,15 +113,15 @@ export default function ContactView() {
     setError(null);
     setStatus("sending");
 
-    const subject = encodeURIComponent(`Portfolio contact — ${name.trim()}`);
+    const subject = encodeURIComponent(`Message from ${name.trim()}`);
     const body = encodeURIComponent(
-      `name: ${name.trim()}\nemail: ${email.trim()}\n\n${message.trim()}\n`,
+      `Hi Raza,\n\n${message.trim()}\n\n— ${name.trim()}\n${email.trim()}\n`,
     );
 
     window.setTimeout(() => {
       window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
       setStatus("sent");
-    }, 650);
+    }, 500);
   }
 
   return (
@@ -135,92 +133,74 @@ export default function ContactView() {
 
       <div className="relative mx-auto w-full max-w-6xl px-4 md:px-12 lg:px-24">
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.15fr)] lg:gap-10">
-          {/* Left — connection brief */}
+          {/* Left — friendly intro */}
           <div className="min-w-0 space-y-6">
             <div className="space-y-3">
               <p className="font-mono text-sm text-primary">
-                <span className="text-foreground-muted">{"//"}</span> 07. Get In
-                Touch
+                <span className="text-foreground-muted">{"//"}</span> Contact
               </p>
               <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                Initialize Connection
+                Let&apos;s talk
                 <span className="cursor-blink" aria-hidden />
               </h1>
-              <p className="max-w-md font-mono text-sm leading-relaxed text-foreground-muted">
-                Open to collaborations, freelance work, and conversations about
-                full-stack product engineering.
+              <p className="max-w-md text-sm leading-relaxed text-foreground-muted sm:text-[15px]">
+                Have a project idea, a question, or just want to say hello?
+                Fill out the form — I&apos;ll get back to you as soon as I can.
               </p>
             </div>
 
-            {/* Key / Value table */}
-            <div className="overflow-hidden border border-border bg-background-panel">
-              <div className="grid grid-cols-[7rem_1fr] border-b border-border bg-[#1a1f2a] px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-foreground-muted sm:grid-cols-[8rem_1fr] sm:text-[11px]">
-                <span>Key</span>
-                <span>Value</span>
+            <div className="overflow-hidden rounded-md border border-border bg-background-panel">
+              <div className="border-b border-border bg-[#1a1f2a] px-3 py-2 font-mono text-[11px] text-foreground-muted">
+                How to reach me
               </div>
-              <dl className="divide-y divide-border/60 font-mono text-[12px] sm:text-[13px]">
-                <div className="grid grid-cols-[7rem_1fr] gap-2 px-3 py-2.5 sm:grid-cols-[8rem_1fr]">
-                  <dt className="text-[#d4bfff]">email</dt>
-                  <dd>
-                    <a
-                      href={`mailto:${EMAIL}`}
-                      className="break-all text-primary transition-colors hover:text-primary-bright"
-                    >
-                      {EMAIL}
-                    </a>
-                  </dd>
-                </div>
-                <div className="grid grid-cols-[7rem_1fr] gap-2 px-3 py-2.5 sm:grid-cols-[8rem_1fr]">
-                  <dt className="text-[#d4bfff]">location</dt>
-                  <dd className="text-foreground">Lahore, PK · Remote</dd>
-                </div>
-                <div className="grid grid-cols-[7rem_1fr] gap-2 px-3 py-2.5 sm:grid-cols-[8rem_1fr]">
-                  <dt className="text-[#d4bfff]">timezone</dt>
-                  <dd className="text-foreground">UTC+5</dd>
-                </div>
-                <div className="grid grid-cols-[7rem_1fr] gap-2 px-3 py-2.5 sm:grid-cols-[8rem_1fr]">
-                  <dt className="text-[#d4bfff]">status</dt>
-                  <dd className="inline-flex items-center gap-2 text-primary">
-                    <span className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--color-primary)]" />
-                    online
-                  </dd>
-                </div>
+              <dl className="divide-y divide-border/60 text-sm">
+                {DETAILS.map((row) => (
+                  <div
+                    key={row.label}
+                    className="grid grid-cols-[6.5rem_1fr] gap-3 px-3 py-3 sm:grid-cols-[7.5rem_1fr]"
+                  >
+                    <dt className="text-foreground-muted">{row.label}</dt>
+                    <dd className="min-w-0 text-foreground">{row.value}</dd>
+                  </div>
+                ))}
               </dl>
             </div>
 
-            {/* Social — square borders like site secondary CTAs */}
-            <div className="flex flex-wrap gap-3">
-              {SOCIAL.map(({ label, href, Icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target={href.startsWith("mailto:") ? undefined : "_blank"}
-                  rel={
-                    href.startsWith("mailto:")
-                      ? undefined
-                      : "noopener noreferrer"
-                  }
-                  aria-label={label}
-                  className="inline-flex size-10 items-center justify-center border border-border bg-[#0f131a] text-foreground-muted transition-colors hover:border-primary hover:text-primary"
-                >
-                  <Icon className="size-4" aria-hidden />
-                </a>
-              ))}
+            <div>
+              <p className="mb-2 text-xs text-foreground-muted">
+                Or find me online
+              </p>
+              <div className="flex flex-wrap gap-3">
+                {SOCIAL.map(({ label, href, Icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target={href.startsWith("mailto:") ? undefined : "_blank"}
+                    rel={
+                      href.startsWith("mailto:")
+                        ? undefined
+                        : "noopener noreferrer"
+                    }
+                    className="inline-flex items-center gap-2 rounded-md border border-border bg-[#0f131a] px-3 py-2 text-sm text-foreground-muted transition-colors hover:border-primary hover:text-primary"
+                  >
+                    <Icon className="size-4" aria-hidden />
+                    {label}
+                  </a>
+                ))}
+              </div>
             </div>
 
-            <p className="font-mono text-[11px] text-foreground-muted">
-              <Link
-                href="/"
-                className="text-tertiary transition-colors hover:text-primary"
-              >
-                cd ../
-              </Link>{" "}
-              · return home
-            </p>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-sm text-tertiary transition-colors hover:text-primary"
+            >
+              <ArrowLeft className="size-3.5" aria-hidden />
+              Back to home
+            </Link>
           </div>
 
-          {/* Right — terminal form */}
-          <div className="min-w-0 overflow-hidden border border-border bg-[#0f131a] shadow-[0_16px_40px_rgba(0,0,0,0.35)]">
+          {/* Right — friendly form, light terminal chrome */}
+          <div className="min-w-0 overflow-hidden rounded-md border border-border bg-[#0f131a] shadow-[0_16px_40px_rgba(0,0,0,0.35)]">
             <div className="relative flex items-center border-b border-border bg-[#1a1f2a] px-3 py-2.5">
               <div className="z-10 flex gap-1.5">
                 <span
@@ -239,123 +219,86 @@ export default function ContactView() {
                   aria-hidden
                 />
               </div>
-              <span className="pointer-events-none absolute inset-x-0 text-center font-mono text-[11px] text-foreground-muted sm:text-xs">
-                visitor@razaali.dev:~/contact.cmd
-              </span>
-              <span className="ml-auto hidden items-center gap-1 font-mono text-[10px] text-foreground-muted sm:inline-flex">
-                <Terminal className="size-3 text-primary" aria-hidden />
-                tty
+              <span className="pointer-events-none absolute inset-x-0 text-center text-[11px] text-foreground-muted sm:text-xs">
+                Send a message
               </span>
             </div>
 
             <form
               onSubmit={onSubmit}
-              className="space-y-4 px-3 py-4 font-mono text-[12px] sm:space-y-5 sm:px-5 sm:py-5 sm:text-[13px]"
+              className="space-y-5 px-4 py-5 sm:px-5 sm:py-6"
               noValidate
             >
-              <div className="space-y-1 text-foreground-muted">
-                <p>Last login: {loginLine} on ttys001</p>
-                <p>
-                  Welcome to{" "}
-                  <span className="text-foreground">razaali.dev</span>{" "}
-                  <span className="text-secondary">v2.0</span>.
-                </p>
-                <p>
-                  <span className="text-primary">$</span> ./message.sh{" "}
-                  <span className="text-secondary">--init</span>
-                </p>
-                <p># Executing secure messaging protocol…</p>
-              </div>
+              <p className="text-sm text-foreground-muted">
+                Tell me a bit about you and what you have in mind.
+              </p>
 
-              <label className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:gap-2">
-                <PromptLabel>name</PromptLabel>
+              <label className="block space-y-1.5">
+                <span className="text-sm text-foreground">Your name</span>
                 <input
                   type="text"
                   name="name"
                   autoComplete="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  onFocus={() => setActive("name")}
-                  onBlur={() => setActive(null)}
-                  placeholder="Enter your name"
-                  className="min-w-0 flex-1 border-0 bg-transparent p-0 text-foreground outline-none placeholder:text-foreground-muted/50 focus:ring-0"
+                  placeholder="e.g. Alex"
+                  className="w-full rounded-md border border-border bg-[#0b0e14] px-3 py-2.5 text-sm text-foreground outline-none placeholder:text-foreground-muted/50 focus:border-primary"
                 />
-                {active === "name" && (
-                  <span className="hidden text-primary sm:inline" aria-hidden>
-                    ▊
-                  </span>
-                )}
               </label>
 
-              <label className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:gap-2">
-                <PromptLabel>email</PromptLabel>
+              <label className="block space-y-1.5">
+                <span className="text-sm text-foreground">Your email</span>
                 <input
                   type="email"
                   name="email"
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  onFocus={() => setActive("email")}
-                  onBlur={() => setActive(null)}
-                  placeholder="Enter your email"
-                  className="min-w-0 flex-1 border-0 bg-transparent p-0 text-foreground outline-none placeholder:text-foreground-muted/50 focus:ring-0"
+                  placeholder="you@example.com"
+                  className="w-full rounded-md border border-border bg-[#0b0e14] px-3 py-2.5 text-sm text-foreground outline-none placeholder:text-foreground-muted/50 focus:border-primary"
                 />
-                {active === "email" && (
-                  <span className="hidden text-primary sm:inline" aria-hidden>
-                    ▊
-                  </span>
-                )}
               </label>
 
-              <label className="flex flex-col gap-1.5">
-                <PromptLabel>message</PromptLabel>
+              <label className="block space-y-1.5">
+                <span className="text-sm text-foreground">Message</span>
                 <textarea
                   name="message"
                   rows={5}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  onFocus={() => setActive("message")}
-                  onBlur={() => setActive(null)}
-                  placeholder="Type your message…"
-                  className="mt-1 min-h-[7rem] w-full resize-y border border-border bg-[#0b0e14] px-3 py-2 text-foreground outline-none placeholder:text-foreground-muted/50 focus:border-primary"
+                  placeholder="What would you like to chat about?"
+                  className="min-h-[8rem] w-full resize-y rounded-md border border-border bg-[#0b0e14] px-3 py-2.5 text-sm text-foreground outline-none placeholder:text-foreground-muted/50 focus:border-primary"
                 />
               </label>
 
               <div
-                className="min-h-[1.25rem] font-mono text-[11px] sm:text-xs"
+                className="min-h-[1.25rem] text-sm"
                 aria-live="polite"
               >
                 {status === "error" && error && (
-                  <p className="text-danger"># error: {error}</p>
+                  <p className="text-danger">{error}</p>
                 )}
                 {status === "sending" && (
-                  <p className="text-secondary"># packing payload…</p>
+                  <p className="text-secondary">Opening your email app…</p>
                 )}
                 {status === "sent" && (
                   <p className="text-primary">
-                    ✓ exit 0 — mail client opened. Talk soon.
-                  </p>
-                )}
-                {status === "idle" && active === null && (
-                  <p className="text-foreground-muted">
-                    <span className="text-primary">visitor@razaali.dev</span>
-                    <span>:~$</span>{" "}
-                    <span className="cursor-blink" aria-hidden />
+                    Almost done — finish sending in your email app. Thanks!
                   </p>
                 )}
               </div>
 
               <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border/50 pt-5">
-                <span className="text-[10px] text-foreground-muted sm:text-[11px]">
-                  # opens mailto → {EMAIL}
-                </span>
+                <p className="max-w-[14rem] text-xs text-foreground-muted">
+                  This opens your email app with the message ready to send.
+                </p>
                 <button
                   type="submit"
                   disabled={status === "sending"}
                   className="btn gap-2 text-sm disabled:pointer-events-none disabled:opacity-55"
                 >
                   <Send className="size-3.5" aria-hidden />
-                  $ send --message
+                  Send message
                 </button>
               </div>
             </form>

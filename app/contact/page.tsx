@@ -4,7 +4,7 @@ import ContactView from "@/components/contact/ContactView";
 export const metadata: Metadata = {
   title: "Contact | Raza Ali",
   description:
-    "Get in touch with Raza Ali — full stack engineer open to collaborations, freelance work, and product engineering conversations.",
+    "Get in touch with Raza Ali — say hello, ask a question, or talk about a project.",
 };
 
 export default function ContactPage() {
