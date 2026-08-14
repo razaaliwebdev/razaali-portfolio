@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Victor_Mono } from "next/font/google";
-import { BootSplash } from "@/components/TerminalLoader";
 import "./globals.css";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
@@ -67,11 +64,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${jetbrainsMono.variable} ${victorMono.variable} dark h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground font-mono">
-        <BootSplash />
-        <Header />
+      <body className="flex min-h-full flex-col bg-background font-mono text-foreground">
         {children}
-        <Footer />
       </body>
     </html>
   );
