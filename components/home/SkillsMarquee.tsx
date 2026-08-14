@@ -18,6 +18,8 @@ import {
   SiNodedotjs,
   SiPostgresql,
   SiReact,
+  SiNextdotjs,
+  SiNestjs,
   SiTailwindcss,
 } from "react-icons/si";
 import { TbBrandMongodb, TbCloudUp } from "react-icons/tb";
@@ -36,9 +38,11 @@ const SKILLS: Skill[] = [
   { name: "Bootstrap", Icon: SiBootstrap, color: "#7952B3" },
   { name: "Tailwind CSS", Icon: SiTailwindcss, color: "#06B6D4" },
   { name: "React.js", Icon: SiReact, color: "#61DAFB" },
+  { name: "Next.js", Icon: SiNextdotjs, color: "#e6edf3" },
   { name: "Expo", Icon: SiExpo, color: "#3fb950" },
   { name: "Node.js", Icon: SiNodedotjs, color: "#339933" },
   { name: "Express.js", Icon: SiExpress, color: "#e6edf3" },
+  { name: "Nest.js", Icon: SiNestjs, color: "#E0234E" },
   { name: "Git", Icon: SiGit, color: "#F05032" },
   { name: "MongoDB", Icon: SiMongodb, color: "#47A248" },
   { name: "PostgreSQL", Icon: SiPostgresql, color: "#416EE4" },
@@ -82,7 +86,10 @@ function Track({ ariaHidden }: { ariaHidden?: boolean }) {
       aria-hidden={ariaHidden || undefined}
     >
       {SKILLS.map((skill, i) => (
-        <span key={`${ariaHidden ? "b" : "a"}-${skill.name}`} className="contents">
+        <span
+          key={`${ariaHidden ? "b" : "a"}-${skill.name}`}
+          className="contents"
+        >
           {i > 0 ? (
             <span
               className="mx-1.5 size-0.5 shrink-0 rounded-full bg-border/80 sm:mx-2"
