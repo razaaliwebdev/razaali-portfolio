@@ -48,6 +48,8 @@ type PixelatedCanvasProps = {
   fadeOnLeave?: boolean;
   /** 0..1 smoothing factor for leave fade. Higher = faster fade. */
   fadeSpeed?: number;
+  /** Accessible name for the canvas portrait. */
+  ariaLabel?: string;
 };
 
 export const PixelatedCanvas: React.FC<PixelatedCanvasProps> = ({
@@ -76,6 +78,7 @@ export const PixelatedCanvas: React.FC<PixelatedCanvasProps> = ({
   jitterSpeed = 4,
   fadeOnLeave = true,
   fadeSpeed = 0.1,
+  ariaLabel,
 }) => {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const samplesRef = React.useRef<
@@ -554,7 +557,7 @@ export const PixelatedCanvas: React.FC<PixelatedCanvasProps> = ({
     <canvas
       ref={canvasRef}
       className={className}
-      aria-label="Pixelated rendering of source image"
+      aria-label={ariaLabel ?? "Pixelated rendering of source image"}
       role="img"
     />
   );

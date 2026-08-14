@@ -153,6 +153,7 @@ export default function About() {
                 objectFit="cover"
                 tintColor="#3fb950"
                 tintStrength={0.12}
+                ariaLabel="Portrait of Raza Ali, full stack developer"
                 className="block h-full max-h-full w-full max-w-full object-contain"
               />
             </div>

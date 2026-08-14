@@ -73,12 +73,21 @@ const DETAILS = [
   },
 ] as const;
 
-export default function ContactView() {
+export default function ContactView({
+  defaultSubject,
+  source = "contact",
+  sourceRef,
+}: {
+  defaultSubject?: string;
+  source?: string;
+  sourceRef?: string;
+}) {
   return (
     <section className="relative w-full py-10 lg:py-14">
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
         <div className="absolute inset-0 bg-[#0b0e14]" />
         <div className="hero-line-grid absolute inset-0 opacity-30" />
+        <div className="absolute inset-x-0 top-0 h-64 bg-[radial-gradient(ellipse_at_top,rgba(63,185,80,0.12),transparent_60%)]" />
       </div>
 
       <div className="relative mx-auto w-full max-w-6xl px-4 md:px-12 lg:px-24">
@@ -172,7 +181,11 @@ export default function ContactView() {
               </span>
             </div>
 
-            <ContactInquiryForm />
+            <ContactInquiryForm
+              defaultSubject={defaultSubject}
+              source={source}
+              sourceRef={sourceRef}
+            />
           </div>
         </div>
       </div>

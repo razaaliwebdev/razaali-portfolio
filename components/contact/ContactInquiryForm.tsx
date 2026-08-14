@@ -112,7 +112,15 @@ function SuccessModal({
   );
 }
 
-export default function ContactInquiryForm() {
+export default function ContactInquiryForm({
+  defaultSubject,
+  source = "contact",
+  sourceRef = "",
+}: {
+  defaultSubject?: string;
+  source?: string;
+  sourceRef?: string;
+}) {
   const [state, action, pending] = useActionState<
     SubmitInquiryState,
     FormData
@@ -138,9 +146,18 @@ export default function ContactInquiryForm() {
         className="space-y-5 px-4 py-5 sm:px-5 sm:py-6"
         noValidate
       >
+        <input type="hidden" name="source" defaultValue={source} />
+        <input type="hidden" name="sourceRef" defaultValue={sourceRef} />
+
         <p className="text-sm text-foreground-muted">
           Tell me a bit about you and what you have in mind.
         </p>
+        {source !== "contact" || sourceRef ? (
+          <p className="font-mono text-[11px] text-primary">
+            // via {source}
+            {sourceRef ? ` · ${sourceRef}` : ""}
+          </p>
+        ) : null}
 
         <label className="block space-y-1.5">
           <span className="text-sm text-foreground">Your name</span>
@@ -171,6 +188,7 @@ export default function ContactInquiryForm() {
           <input
             type="text"
             name="subject"
+            defaultValue={defaultSubject}
             placeholder="Project idea, question, hello…"
             className="w-full rounded-md border border-border bg-[#0b0e14] px-3 py-2.5 text-sm text-foreground outline-none placeholder:text-foreground-muted/50 focus:border-primary"
           />
