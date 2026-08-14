@@ -6,7 +6,7 @@ import { CmdHeading, TerminalPanel } from "@/components/admin/TerminalUi";
 import { getAdminAnalytics } from "@/lib/actions/analytics";
 
 export const metadata: Metadata = {
-  title: "Analytics | Admin",
+  title: "Analytics",
   robots: { index: false, follow: false },
 };
 

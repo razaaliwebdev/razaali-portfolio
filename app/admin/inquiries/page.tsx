@@ -7,9 +7,10 @@ import {
   TerminalPanel,
 } from "@/components/admin/TerminalUi";
 import { listInquiries } from "@/lib/actions/inquiries";
+import { formatInquirySource } from "@/lib/inquiry-source";
 
 export const metadata: Metadata = {
-  title: "Inquiries | Admin",
+  title: "Inquiries",
   robots: { index: false, follow: false },
 };
 
@@ -26,11 +27,12 @@ export default async function AdminInquiriesPage() {
         />
 
         <TerminalPanel title="inbox" bodyClassName="overflow-x-auto">
-          <table className="w-full min-w-[44rem] text-left text-sm">
+          <table className="w-full min-w-[52rem] text-left text-sm">
             <thead className="border-b border-border font-mono text-[11px] text-foreground-muted">
               <tr>
                 <th className="px-3 py-2 font-medium">from</th>
                 <th className="px-3 py-2 font-medium">subject</th>
+                <th className="px-3 py-2 font-medium">source</th>
                 <th className="px-3 py-2 font-medium">status</th>
                 <th className="px-3 py-2 font-medium">when</th>
               </tr>
@@ -39,7 +41,7 @@ export default async function AdminInquiriesPage() {
               {items.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={4}
+                    colSpan={5}
                     className="px-3 py-8 font-mono text-foreground-muted"
                   >
                     // inbox empty
@@ -69,6 +71,9 @@ export default async function AdminInquiriesPage() {
                       >
                         {item.subject}
                       </Link>
+                    </td>
+                    <td className="px-3 py-3 font-mono text-[11px] text-tertiary">
+                      {formatInquirySource(item.source, item.sourceRef)}
                     </td>
                     <td className="px-3 py-3">
                       <StatusBadge status={item.status} />

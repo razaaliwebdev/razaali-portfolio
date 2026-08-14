@@ -17,6 +17,7 @@ import {
   isMailConfigured,
   sendMail,
 } from "@/lib/mail";
+import { normalizeInquirySource } from "@/lib/inquiry-source";
 
 export type SubmitInquiryState = {
   ok?: boolean;
@@ -37,6 +38,10 @@ export async function submitInquiry(
   const subject =
     String(formData.get("subject") ?? "").trim() || "General inquiry";
   const message = String(formData.get("message") ?? "").trim();
+  const source = normalizeInquirySource(formData.get("source"));
+  const sourceRef = String(formData.get("sourceRef") ?? "")
+    .trim()
+    .slice(0, 120);
 
   if (!name) return { error: "Please enter your name." };
   if (!email || !isValidEmail(email)) {
@@ -57,6 +62,8 @@ export async function submitInquiry(
         email,
         subject,
         message,
+        source,
+        sourceRef,
         status: "new",
       })
       .returning({ id: inquiries.id });
@@ -95,6 +102,8 @@ export async function submitInquiry(
             subject,
             message,
             inquiryId: row.id,
+            source,
+            sourceRef,
           });
           await sendMail({
             to: notifyTo,

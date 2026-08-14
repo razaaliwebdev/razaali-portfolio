@@ -38,6 +38,10 @@ export const inquiries = pgTable("inquiries", {
   email: varchar("email", { length: 255 }).notNull(),
   subject: varchar("subject", { length: 200 }).notNull().default("General inquiry"),
   message: text("message").notNull(),
+  /** contact | services | projects | home */
+  source: varchar("source", { length: 40 }).notNull().default("contact"),
+  /** slug / id of service or project when applicable */
+  sourceRef: varchar("source_ref", { length: 120 }).notNull().default(""),
   status: varchar("status", { length: 32 }).notNull().default("new"),
   adminNotes: text("admin_notes").notNull().default(""),
   confirmationSentAt: timestamp("confirmation_sent_at", { withTimezone: true }),
@@ -100,8 +104,41 @@ export const projects = pgTable("projects", {
     .defaultNow(),
 });
 
+/** Newsletter subscribers (home page signup) */
+export const newsletterSubscribers = pgTable("newsletter_subscribers", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  status: varchar("status", { length: 32 }).notNull().default("active"),
+  unsubscribeToken: varchar("unsubscribe_token", { length: 64 }).notNull().unique(),
+  source: varchar("source", { length: 64 }).notNull().default("home"),
+  confirmationSentAt: timestamp("confirmation_sent_at", { withTimezone: true }),
+  unsubscribedAt: timestamp("unsubscribed_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+/** Broadcast emails sent to newsletter list */
+export const newsletterCampaigns = pgTable("newsletter_campaigns", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  subject: varchar("subject", { length: 200 }).notNull(),
+  body: text("body").notNull(),
+  status: varchar("status", { length: 32 }).notNull().default("sent"),
+  sentCount: integer("sent_count").notNull().default(0),
+  failedCount: integer("failed_count").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  sentAt: timestamp("sent_at", { withTimezone: true }),
+});
+
 export type Admin = typeof admins.$inferSelect;
 export type Inquiry = typeof inquiries.$inferSelect;
 export type InquiryReply = typeof inquiryReplies.$inferSelect;
 export type Service = typeof services.$inferSelect;
 export type Project = typeof projects.$inferSelect;
+export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
+export type NewsletterCampaign = typeof newsletterCampaigns.$inferSelect;

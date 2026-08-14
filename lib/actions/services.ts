@@ -43,6 +43,17 @@ export async function listServices() {
   );
 }
 
+/** Public catalog — published services only */
+export async function listPublishedServices() {
+  return withDbRetry(() =>
+    db
+      .select()
+      .from(services)
+      .where(eq(services.isPublished, true))
+      .orderBy(asc(services.sortOrder), asc(services.title)),
+  );
+}
+
 export async function getService(id: string) {
   await requireAdmin();
   const [row] = await db

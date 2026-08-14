@@ -5,7 +5,7 @@ import { CmdHeading } from "@/components/admin/TerminalUi";
 import { listProjects } from "@/lib/actions/projects";
 
 export const metadata: Metadata = {
-  title: "Projects | Admin",
+  title: "Projects",
   robots: { index: false, follow: false },
 };
 

@@ -11,11 +11,13 @@ import {
   FolderKanban,
   LayoutDashboard,
   LogOut,
+  Mail,
   MessageSquareText,
   PanelLeft,
   X,
 } from "lucide-react";
 import { signOutAdmin } from "@/lib/actions/auth";
+import AdminNotifications from "@/components/admin/AdminNotifications";
 
 const NAV = [
   {
@@ -33,6 +35,12 @@ const NAV = [
     href: "/admin/inquiries",
     label: "Inquiries",
     icon: MessageSquareText,
+    badgeKey: "inquiries" as const,
+  },
+  {
+    href: "/admin/newsletter",
+    label: "Newsletter",
+    icon: Mail,
   },
   {
     href: "/admin/services",
@@ -48,15 +56,22 @@ const NAV = [
 
 export default function AdminFrame({
   email,
+  unreadInquiries = 0,
   children,
 }: {
   email: string;
+  unreadInquiries?: number;
   children: ReactNode;
 }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [ready, setReady] = useState(false);
+  const [inquiryBadge, setInquiryBadge] = useState(unreadInquiries);
+
+  useEffect(() => {
+    setInquiryBadge(unreadInquiries);
+  }, [unreadInquiries]);
 
   useEffect(() => {
     const saved = window.localStorage.getItem("admin-sidebar-collapsed");
@@ -85,18 +100,31 @@ export default function AdminFrame({
         <div className="hero-line-grid absolute inset-0 opacity-15" />
       </div>
 
-      {/* Mobile top bar */}
-      <div className="fixed inset-x-0 top-0 z-40 flex h-12 items-center justify-between border-b border-border bg-[#0f131a] px-3 lg:hidden">
+      {/* Top bar — mobile + desktop */}
+      <div
+        className={`fixed inset-x-0 top-0 z-40 flex h-12 items-center justify-between border-b border-border bg-[#0f131a]/90 px-3 backdrop-blur-md lg:h-14 lg:justify-end lg:px-6 ${desktopPad}`}
+      >
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
-          className="inline-flex size-9 items-center justify-center border border-border text-foreground-muted hover:border-primary hover:text-primary"
+          className="inline-flex size-9 items-center justify-center border border-border text-foreground-muted hover:border-primary hover:text-primary lg:hidden"
           aria-label="Open sidebar"
         >
           <PanelLeft className="size-4" />
         </button>
-        <span className="text-sm font-medium text-foreground">Admin</span>
-        <span className="w-9" aria-hidden />
+        <span className="text-sm font-medium text-foreground lg:hidden">
+          Admin
+        </span>
+        <div className="flex items-center gap-3">
+          <p className="hidden font-mono text-[11px] text-foreground-muted lg:block">
+            <span className="text-primary">admin@razaali.dev</span>
+            <span className="text-foreground-muted">:~$</span>
+          </p>
+          <AdminNotifications
+            unreadHint={inquiryBadge}
+            onCountChange={setInquiryBadge}
+          />
+        </div>
       </div>
 
       {mobileOpen ? (
@@ -160,7 +188,11 @@ export default function AdminFrame({
               ? pathname === item.href
               : pathname.startsWith(item.href);
             const Icon = item.icon;
-            const rowClass = `flex items-center gap-3 px-3 py-2.5 text-sm ${
+            const showBadge =
+              "badgeKey" in item &&
+              item.badgeKey === "inquiries" &&
+              inquiryBadge > 0;
+            const rowClass = `relative flex items-center gap-3 px-3 py-2.5 text-sm ${
               collapsed ? "lg:justify-center lg:px-2" : ""
             }`;
 
@@ -175,9 +207,23 @@ export default function AdminFrame({
                     : "border border-transparent text-foreground-muted hover:border-border hover:text-foreground"
                 }`}
               >
-                <Icon className="size-4 shrink-0" />
-                <span className={`truncate ${collapsed ? "lg:hidden" : ""}`}>
-                  {item.label}
+                <span className="relative shrink-0">
+                  <Icon className="size-4" />
+                  {showBadge && collapsed ? (
+                    <span className="absolute -right-1 -top-1 size-2 rounded-full bg-primary lg:block" />
+                  ) : null}
+                </span>
+                <span
+                  className={`flex min-w-0 flex-1 items-center justify-between gap-2 ${
+                    collapsed ? "lg:hidden" : ""
+                  }`}
+                >
+                  <span className="truncate">{item.label}</span>
+                  {showBadge ? (
+                    <span className="shrink-0 bg-primary px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#0b0e14]">
+                      {inquiryBadge > 99 ? "99+" : inquiryBadge}
+                    </span>
+                  ) : null}
                 </span>
               </Link>
             );
@@ -221,7 +267,7 @@ export default function AdminFrame({
       </aside>
 
       <div
-        className={`min-h-dvh pt-12 transition-[padding] duration-200 lg:pt-0 ${desktopPad}`}
+        className={`min-h-dvh pt-12 transition-[padding] duration-200 lg:pt-14 ${desktopPad}`}
       >
         <main className="p-4 sm:p-6 lg:p-8">
           <div className="mx-auto w-full max-w-6xl">{children}</div>

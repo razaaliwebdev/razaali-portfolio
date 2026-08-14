@@ -3,7 +3,7 @@ import Link from "next/link";
 import AdminLoginForm from "@/components/admin/AdminLoginForm";
 
 export const metadata: Metadata = {
-  title: "Admin Sign In | Raza Ali",
+  title: "Sign In",
   robots: { index: false, follow: false },
 };
 

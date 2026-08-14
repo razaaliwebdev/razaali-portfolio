@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityCalendar, type Activity } from "react-activity-calendar";
+import "react-activity-calendar/tooltips.css";
 
 const GITHUB_USER = "razaaliwebdev";
 const JOIN_YEAR = 2024;
@@ -46,6 +47,32 @@ function computeStats(days: Activity[]) {
   }
 
   return { longest, current, active, peak };
+}
+
+/** Consecutive active days ending on `date` (0 if that day had no commits). */
+function streakThroughDate(days: Activity[], date: string) {
+  const idx = days.findIndex((d) => d.date === date);
+  if (idx < 0 || days[idx].count <= 0) return 0;
+
+  let streak = 0;
+  for (let i = idx; i >= 0; i -= 1) {
+    if (days[i].count > 0) streak += 1;
+    else break;
+  }
+  return streak;
+}
+
+function formatActivityTooltip(days: Activity[], activity: Activity) {
+  const label = new Date(`${activity.date}T12:00:00`).toLocaleDateString(
+    "en-US",
+    { weekday: "short", month: "short", day: "numeric", year: "numeric" },
+  );
+  const commits =
+    activity.count === 1 ? "1 contribution" : `${activity.count} contributions`;
+  const streak = streakThroughDate(days, activity.date);
+  const streakLabel =
+    streak > 0 ? ` · streak ${streak}` : activity.count === 0 ? "" : "";
+  return `${commits} on ${label}${streakLabel}`;
 }
 
 function CalendarSkeleton({ withLabels }: { withLabels: boolean }) {
@@ -279,6 +306,16 @@ export default function Contributions() {
                     showWeekdayLabels={showWeekdayLabels}
                     showTotalCount={false}
                     showColorLegend={false}
+                    tooltips={{
+                      activity: {
+                        text: (activity) =>
+                          formatActivityTooltip(data, activity),
+                        placement: "top",
+                        offset: 8,
+                        hoverRestMs: 40,
+                        withArrow: true,
+                      },
+                    }}
                   />
                 ) : (
                   <CalendarSkeleton withLabels={showWeekdayLabels} />

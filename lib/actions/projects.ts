@@ -43,6 +43,17 @@ export async function listProjects() {
   );
 }
 
+/** Public catalog — published projects only */
+export async function listPublishedProjects() {
+  return withDbRetry(() =>
+    db
+      .select()
+      .from(projects)
+      .where(eq(projects.isPublished, true))
+      .orderBy(asc(projects.sortOrder), asc(projects.title)),
+  );
+}
+
 export async function getProject(id: string) {
   await requireAdmin();
   const [row] = await db

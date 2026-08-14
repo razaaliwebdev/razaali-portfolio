@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, SquareTerminal, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { NAV_LINKS } from "@/constants";
@@ -14,7 +15,21 @@ function scrollToHash(href: string) {
   if (!el) return false;
   el.scrollIntoView({ behavior: "smooth", block: "start" });
   window.history.pushState(null, "", `/#${id}`);
+  window.dispatchEvent(new HashChangeEvent("hashchange"));
   return true;
+}
+
+function readHash() {
+  if (typeof window === "undefined") return "";
+  return window.location.hash.replace(/^#/, "");
+}
+
+function isNavActive(href: string, pathname: string, hash: string) {
+  if (href.includes("#")) {
+    const id = href.split("#")[1] ?? "";
+    return pathname === "/" && hash === id;
+  }
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 function TypedText({
@@ -60,13 +75,15 @@ function TypedText({
 function TypedLink({
   href,
   title,
-  active,
+  open,
+  current,
   delay,
   onNavigate,
 }: {
   href: string;
   title: string;
-  active: boolean;
+  open: boolean;
+  current: boolean;
   delay: number;
   onNavigate: () => void;
 }) {
@@ -79,10 +96,15 @@ function TypedLink({
         if (scrollToHash(href)) e.preventDefault();
         onNavigate();
       }}
-      className="group flex items-baseline gap-2 py-2 text-lg text-foreground-muted transition-colors duration-300 hover:text-primary"
+      aria-current={current ? "page" : undefined}
+      className={`group flex items-baseline gap-2 py-2 text-lg transition-colors duration-300 ${
+        current
+          ? "text-primary"
+          : "text-foreground-muted hover:text-primary"
+      }`}
     >
       <span className="text-primary">$</span>
-      {active ? (
+      {open ? (
         <TypedText
           title={title}
           delay={delay}
@@ -96,11 +118,24 @@ function TypedLink({
 }
 
 export default function Header({ isAdmin = false }: { isAdmin?: boolean }) {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [hash, setHash] = useState(readHash);
   const [scrolled, setScrolled] = useState(
     () => typeof window !== "undefined" && window.scrollY > 8,
   );
   const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    const syncHash = () => setHash(readHash());
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    window.addEventListener("popstate", syncHash);
+    return () => {
+      window.removeEventListener("hashchange", syncHash);
+      window.removeEventListener("popstate", syncHash);
+    };
+  }, [pathname]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -133,10 +168,16 @@ export default function Header({ isAdmin = false }: { isAdmin?: boolean }) {
     <header
       className={`sticky top-0 z-40 border-b bg-background/30 transition-[background-color,backdrop-filter,box-shadow] duration-300 ${
         scrolled
-          ? "border-border-hover bg-background/60 shadow-lg shadow-black/30 backdrop-blur-xl"
+          ? "relative border-border/50 bg-background/60 shadow-lg shadow-black/30 backdrop-blur-xl"
           : "border-border bg-background/90 backdrop-blur-sm"
       }`}
     >
+      {scrolled && (
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"
+          aria-hidden
+        />
+      )}
       <div className="flex items-center justify-between px-6 py-3 md:px-12 lg:px-24">
         <Link
           href="/"
@@ -146,18 +187,29 @@ export default function Header({ isAdmin = false }: { isAdmin?: boolean }) {
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.id}
-              href={link.href}
-              onClick={(e) => {
-                if (scrollToHash(link.href)) e.preventDefault();
-              }}
-              className="text-sm text-foreground-muted transition-colors duration-300 hover:text-foreground"
-            >
-              {link.title}
-            </Link>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const active = isNavActive(link.href, pathname, hash);
+            return (
+              <Link
+                key={link.id}
+                href={link.href}
+                onClick={(e) => {
+                  if (scrollToHash(link.href)) {
+                    e.preventDefault();
+                    setHash(link.href.split("#")[1] ?? "");
+                  }
+                }}
+                aria-current={active ? "page" : undefined}
+                className={`text-sm transition-colors duration-300 ${
+                  active
+                    ? "text-primary"
+                    : "text-foreground-muted hover:text-foreground"
+                }`}
+              >
+                {link.title}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="hidden items-center gap-6 md:flex">
@@ -195,7 +247,7 @@ export default function Header({ isAdmin = false }: { isAdmin?: boolean }) {
                 key="menu"
                 initial={reduceMotion ? false : { opacity: 0, rotate: 90 }}
                 animate={{ opacity: 1, rotate: 0 }}
-                exit={{ opacity: 0, rotate: -90 }}
+                exit={{ opacity: 0, rotate: 90 }}
                 transition={{ duration: 0.2 }}
               >
                 <Menu className="size-6" />
@@ -253,9 +305,15 @@ export default function Header({ isAdmin = false }: { isAdmin?: boolean }) {
                     key={link.id}
                     href={link.href}
                     title={link.title}
-                    active={open}
+                    open={open}
+                    current={isNavActive(link.href, pathname, hash)}
                     delay={120 + i * 220}
-                    onNavigate={() => setOpen(false)}
+                    onNavigate={() => {
+                      if (link.href.includes("#")) {
+                        setHash(link.href.split("#")[1] ?? "");
+                      }
+                      setOpen(false);
+                    }}
                   />
                 ))}
 

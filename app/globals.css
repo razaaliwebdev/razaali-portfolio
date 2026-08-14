@@ -188,6 +188,34 @@ body {
   margin-left: 0 !important;
 }
 
+/* Heatmap day hover tooltips (library portals these; match terminal chrome) */
+.react-activity-calendar__tooltip {
+  z-index: 80;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  background-color: #0f131a !important;
+  color: #e6edf3 !important;
+  font-family: var(--font-mono), "Fira Code", ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 1.35;
+  padding: 0.35em 0.65em;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+.react-activity-calendar__tooltip .react-activity-calendar__tooltip-arrow {
+  fill: #0f131a !important;
+}
+
+.react-activity-calendar__tooltip[data-color-scheme="dark"] {
+  background-color: #0f131a !important;
+  color: #e6edf3 !important;
+}
+
+.react-activity-calendar__tooltip[data-color-scheme="dark"]
+  .react-activity-calendar__tooltip-arrow {
+  fill: #0f131a !important;
+}
+
 /* ============ HERO SKILLS MARQUEE ============ */
 .skills-marquee__viewport {
   -webkit-mask-image: linear-gradient(

@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { absoluteUrl } from "@/lib/seo";
 
 export type SendMailInput = {
   to: string;
@@ -8,8 +9,7 @@ export type SendMailInput = {
   replyTo?: string;
 };
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://razaali.dev";
+const SITE_URL = absoluteUrl("/").replace(/\/$/, "");
 
 function required(name: string) {
   const value = process.env[name]?.trim();
@@ -82,12 +82,13 @@ function nl2br(value: string) {
   return escapeHtml(value).replaceAll("\n", "<br/>");
 }
 
-/** Shared terminal-style shell (inline CSS — email clients strip &lt;style&gt;) */
+/** Shared terminal-style shell (inline CSS — email clients strip <style>) */
 function emailShell(input: {
   eyebrow: string;
   title: string;
   bodyHtml: string;
   footerNote?: string;
+  footerHtml?: string;
 }) {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -123,6 +124,7 @@ function emailShell(input: {
                   ? `<p style="margin:12px 0 0;color:#6e7681;font-size:11px;">${escapeHtml(input.footerNote)}</p>`
                   : ""
               }
+              ${input.footerHtml ?? ""}
             </td>
           </tr>
         </table>
@@ -170,7 +172,12 @@ export function inquiryAdminAlertEmail(input: {
   subject: string;
   message: string;
   inquiryId: string;
+  source?: string;
+  sourceRef?: string;
 }) {
+  const sourceLabel = input.sourceRef
+    ? `${input.source ?? "contact"} · ${input.sourceRef}`
+    : input.source || "contact";
   const subject = `[Inquiry] ${input.subject} — ${input.name}`;
   const adminUrl = `${SITE_URL}/admin/inquiries/${input.inquiryId}`;
   const text = [
@@ -178,6 +185,7 @@ export function inquiryAdminAlertEmail(input: {
     "",
     `From: ${input.name} <${input.email}>`,
     `Subject: ${input.subject}`,
+    `Source: ${sourceLabel}`,
     "",
     input.message,
     "",
@@ -199,6 +207,10 @@ export function inquiryAdminAlertEmail(input: {
         <tr>
           <td style="padding:10px 12px;color:#8b949e;font-size:12px;border-bottom:1px solid #30363d;">Subject</td>
           <td style="padding:10px 12px;border-bottom:1px solid #30363d;color:#ffa657;">${escapeHtml(input.subject)}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 12px;color:#8b949e;font-size:12px;border-bottom:1px solid #30363d;">Source</td>
+          <td style="padding:10px 12px;border-bottom:1px solid #30363d;color:#3fb950;">${escapeHtml(sourceLabel)}</td>
         </tr>
         <tr>
           <td style="padding:10px 12px;color:#8b949e;font-size:12px;vertical-align:top;">Message</td>
@@ -227,6 +239,66 @@ export function inquiryReplyEmail(input: {
         ${nl2br(input.body)}
       </div>
     `,
+  });
+
+  return { text, html };
+}
+
+export function newsletterWelcomeEmail(input: {
+  email: string;
+  unsubscribeToken: string;
+}) {
+  const unsubUrl = `${SITE_URL}/newsletter/unsubscribe?token=${encodeURIComponent(input.unsubscribeToken)}`;
+  const subject = "You're on the list — razaali.dev";
+  const text = [
+    "You're subscribed to updates from Raza Ali.",
+    "",
+    "Occasionally I'll share projects, notes, and useful builds — no spam.",
+    "",
+    `Unsubscribe anytime: ${unsubUrl}`,
+    "",
+    "— Raza Ali",
+    SITE_URL,
+  ].join("\n");
+
+  const html = emailShell({
+    eyebrow: "newsletter · welcome",
+    title: "You're subscribed",
+    bodyHtml: `
+      <p style="margin:0 0 12px;">Thanks for joining the list.</p>
+      <p style="margin:0 0 12px;color:#8b949e;">I'll occasionally share projects, notes, and useful builds from <span style="color:#3fb950;">razaali.dev</span> — no spam, no weekly noise.</p>
+    `,
+    footerNote: "You're receiving this because you subscribed on the site.",
+    footerHtml: `<p style="margin:10px 0 0;font-size:11px;"><a href="${unsubUrl}" style="color:#6e7681;">Unsubscribe</a></p>`,
+  });
+
+  return { subject, text, html };
+}
+
+export function newsletterCampaignEmail(input: {
+  subject: string;
+  body: string;
+  unsubscribeToken: string;
+}) {
+  const unsubUrl = `${SITE_URL}/newsletter/unsubscribe?token=${encodeURIComponent(input.unsubscribeToken)}`;
+  const text = [
+    input.body,
+    "",
+    "— Raza Ali",
+    SITE_URL,
+    "",
+    `Unsubscribe: ${unsubUrl}`,
+  ].join("\n");
+
+  const html = emailShell({
+    eyebrow: "newsletter",
+    title: input.subject,
+    bodyHtml: `
+      <div style="margin:0;padding:14px 16px;border:1px solid #30363d;background:#0b0e14;color:#e6edf3;">
+        ${nl2br(input.body)}
+      </div>
+    `,
+    footerHtml: `<p style="margin:10px 0 0;font-size:11px;color:#6e7681;">You're receiving this as a razaali.dev subscriber. <a href="${unsubUrl}" style="color:#6e7681;">Unsubscribe</a></p>`,
   });
 
   return { text, html };

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { GitBranch, FolderOpen } from "lucide-react";
 import CommitCount from "@/components/home/CommitCount";
@@ -365,18 +366,18 @@ function HeroIntro({ reduceMotion }: { reduceMotion: boolean | null }) {
 
       {/* CTAs — single row */}
       <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-        <a href="/projects" className="btn">
+        <Link href="/projects" className="btn">
           <span className="inline-flex items-center gap-2">
             <FolderOpen className="size-4" aria-hidden />
             ./view_projects.sh
           </span>
-        </a>
-        <a
-          href="/contact"
+        </Link>
+        <Link
+          href="/contact?source=home"
           className="inline-flex items-center border border-border px-4 py-2 text-sm text-foreground transition-colors hover:border-primary hover:text-primary"
         >
           <span>git contact --verbose</span>
-        </a>
+        </Link>
         <div className="inline-flex items-center gap-2 border border-border px-3 py-2 text-xs text-foreground-muted">
           <GitBranch className="size-3.5 text-primary" aria-hidden />
           <span>
@@ -403,6 +404,7 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
         <div className="absolute inset-0 bg-[#0b0e14]" />
         <div className="hero-line-grid absolute inset-0" />
+        <div className="absolute inset-x-0 top-0 h-64 bg-[radial-gradient(ellipse_at_top,rgba(63,185,80,0.12),transparent_60%)]" />
       </div>
 
       <div className="relative z-10 grid w-full grid-cols-1 gap-10 px-6 md:px-12 lg:grid-cols-2 lg:items-center lg:gap-12 lg:px-24">

@@ -7,7 +7,7 @@ import { getAdminAnalytics } from "@/lib/actions/analytics";
 import { isMailConfigured } from "@/lib/mail";
 
 export const metadata: Metadata = {
-  title: "Admin | Raza Ali",
+  title: "Dashboard",
   robots: { index: false, follow: false },
 };
 

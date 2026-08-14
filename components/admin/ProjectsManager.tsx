@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -221,6 +222,14 @@ export function ProjectsManager({ items }: { items: Project[] }) {
                   </td>
                   <td className="px-3 py-3">
                     <div className="flex flex-wrap gap-2">
+                      <Link
+                        href={`/projects#${item.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-mono text-xs text-tertiary hover:text-primary"
+                      >
+                        view
+                      </Link>
                       <button
                         type="button"
                         className="font-mono text-xs text-secondary hover:text-primary"
