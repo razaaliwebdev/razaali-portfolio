@@ -95,7 +95,7 @@ function TypedLink({
   );
 }
 
-export default function Header() {
+export default function Header({ isAdmin = false }: { isAdmin?: boolean }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(
     () => typeof window !== "undefined" && window.scrollY > 8,
@@ -115,9 +115,23 @@ export default function Header() {
     };
   }, [open]);
 
+  const cta = isAdmin ? (
+    <Link href="/admin" className="btn">
+      $Admin
+    </Link>
+  ) : (
+    <a
+      href="/file/Raza_Ali_resume.pdf"
+      download="Raza_Ali_Resume.pdf"
+      className="btn"
+    >
+      $Download CV
+    </a>
+  );
+
   return (
     <header
-      className={`sticky bg-background/30 top-0 z-40 border-b transition-[background-color,backdrop-filter,box-shadow] duration-300 ${
+      className={`sticky top-0 z-40 border-b bg-background/30 transition-[background-color,backdrop-filter,box-shadow] duration-300 ${
         scrolled
           ? "border-border-hover bg-background/60 shadow-lg shadow-black/30 backdrop-blur-xl"
           : "border-border bg-background/90 backdrop-blur-sm"
@@ -131,7 +145,6 @@ export default function Header() {
           ~/dev_portfolio_v2.0
         </Link>
 
-        {/* Desktop nav */}
         <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
           {NAV_LINKS.map((link) => (
             <Link
@@ -155,16 +168,9 @@ export default function Header() {
           >
             <SquareTerminal className="size-5" />
           </button>
-          <a
-            href="/file/Raza_Ali_resume.pdf"
-            download="Raza_Ali_Resume.pdf"
-            className="btn"
-          >
-            $Download CV
-          </a>
+          {cta}
         </div>
 
-        {/* Mobile hamburger — hidden on desktop */}
         <button
           type="button"
           className="relative z-50 flex size-10 items-center justify-center text-foreground md:hidden"
@@ -199,7 +205,6 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile terminal menu */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -255,14 +260,24 @@ export default function Header() {
                 ))}
 
                 <div className="mt-6 border-t border-border pt-4">
-                  <a
-                    href="/file/Raza_Ali_resume.pdf"
-                    download="Raza_Ali_Resume.pdf"
-                    className="btn"
-                    onClick={() => setOpen(false)}
-                  >
-                    $Download CV
-                  </a>
+                  {isAdmin ? (
+                    <Link
+                      href="/admin"
+                      className="btn"
+                      onClick={() => setOpen(false)}
+                    >
+                      $Admin
+                    </Link>
+                  ) : (
+                    <a
+                      href="/file/Raza_Ali_resume.pdf"
+                      download="Raza_Ali_Resume.pdf"
+                      className="btn"
+                      onClick={() => setOpen(false)}
+                    >
+                      $Download CV
+                    </a>
+                  )}
                 </div>
               </div>
             </motion.nav>

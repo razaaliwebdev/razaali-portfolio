@@ -4,9 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import {
+  Activity,
   BriefcaseBusiness,
   ChevronsLeft,
   ExternalLink,
+  FolderKanban,
   LayoutDashboard,
   LogOut,
   MessageSquareText,
@@ -23,16 +25,24 @@ const NAV = [
     exact: true,
   },
   {
+    href: "/admin/analytics",
+    label: "Analytics",
+    icon: Activity,
+  },
+  {
     href: "/admin/inquiries",
     label: "Inquiries",
     icon: MessageSquareText,
-    soon: true,
   },
   {
     href: "/admin/services",
     label: "Services",
     icon: BriefcaseBusiness,
-    soon: true,
+  },
+  {
+    href: "/admin/projects",
+    label: "Projects",
+    icon: FolderKanban,
   },
 ] as const;
 
@@ -145,30 +155,14 @@ export default function AdminFrame({
 
         <nav className="flex-1 space-y-1 overflow-y-auto p-2" aria-label="Admin">
           {NAV.map((item) => {
-            const active = item.exact
+            const exact = "exact" in item && item.exact;
+            const active = exact
               ? pathname === item.href
               : pathname.startsWith(item.href);
             const Icon = item.icon;
-            const soon = "soon" in item && item.soon;
             const rowClass = `flex items-center gap-3 px-3 py-2.5 text-sm ${
               collapsed ? "lg:justify-center lg:px-2" : ""
             }`;
-
-            if (soon) {
-              return (
-                <span
-                  key={item.href}
-                  title={`${item.label} (soon)`}
-                  className={`${rowClass} text-foreground-muted/40`}
-                >
-                  <Icon className="size-4 shrink-0" />
-                  <span className={`truncate ${collapsed ? "lg:hidden" : ""}`}>
-                    {item.label}
-                    <span className="ml-1 text-[10px] uppercase">soon</span>
-                  </span>
-                </span>
-              );
-            }
 
             return (
               <Link

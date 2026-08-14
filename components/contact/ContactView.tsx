@@ -1,16 +1,8 @@
-"use client";
-
-import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { ArrowLeft, Mail, Send } from "lucide-react";
+import { ArrowLeft, Mail } from "lucide-react";
+import ContactInquiryForm from "@/components/contact/ContactInquiryForm";
 
 const EMAIL = "razaali.webdev@gmail.com";
-
-const MAC_DOTS = {
-  close: "#FF5F57",
-  minimize: "#FEBC2E",
-  maximize: "#28C840",
-} as const;
 
 function GitHubIcon({ className }: { className?: string }) {
   return (
@@ -82,48 +74,6 @@ const DETAILS = [
 ] as const;
 
 export default function ContactView() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle",
-  );
-  const [error, setError] = useState<string | null>(null);
-
-  function validate() {
-    if (!name.trim()) return "Please enter your name.";
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return "Please enter a valid email address.";
-    }
-    if (!message.trim() || message.trim().length < 8) {
-      return "Please write a short message (at least a sentence).";
-    }
-    return null;
-  }
-
-  function onSubmit(e: FormEvent) {
-    e.preventDefault();
-    const err = validate();
-    if (err) {
-      setError(err);
-      setStatus("error");
-      return;
-    }
-
-    setError(null);
-    setStatus("sending");
-
-    const subject = encodeURIComponent(`Message from ${name.trim()}`);
-    const body = encodeURIComponent(
-      `Hi Raza,\n\n${message.trim()}\n\n— ${name.trim()}\n${email.trim()}\n`,
-    );
-
-    window.setTimeout(() => {
-      window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
-      setStatus("sent");
-    }, 500);
-  }
-
   return (
     <section className="relative w-full py-10 lg:py-14">
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
@@ -133,7 +83,6 @@ export default function ContactView() {
 
       <div className="relative mx-auto w-full max-w-6xl px-4 md:px-12 lg:px-24">
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.15fr)] lg:gap-10">
-          {/* Left — friendly intro */}
           <div className="min-w-0 space-y-6">
             <div className="space-y-3">
               <p className="font-mono text-sm text-primary">
@@ -199,23 +148,22 @@ export default function ContactView() {
             </Link>
           </div>
 
-          {/* Right — friendly form, light terminal chrome */}
           <div className="min-w-0 overflow-hidden rounded-md border border-border bg-[#0f131a] shadow-[0_16px_40px_rgba(0,0,0,0.35)]">
             <div className="relative flex items-center border-b border-border bg-[#1a1f2a] px-3 py-2.5">
               <div className="z-10 flex gap-1.5">
                 <span
                   className="size-2.5 rounded-full"
-                  style={{ backgroundColor: MAC_DOTS.close }}
+                  style={{ backgroundColor: "#FF5F57" }}
                   aria-hidden
                 />
                 <span
                   className="size-2.5 rounded-full"
-                  style={{ backgroundColor: MAC_DOTS.minimize }}
+                  style={{ backgroundColor: "#FEBC2E" }}
                   aria-hidden
                 />
                 <span
                   className="size-2.5 rounded-full"
-                  style={{ backgroundColor: MAC_DOTS.maximize }}
+                  style={{ backgroundColor: "#28C840" }}
                   aria-hidden
                 />
               </div>
@@ -224,84 +172,7 @@ export default function ContactView() {
               </span>
             </div>
 
-            <form
-              onSubmit={onSubmit}
-              className="space-y-5 px-4 py-5 sm:px-5 sm:py-6"
-              noValidate
-            >
-              <p className="text-sm text-foreground-muted">
-                Tell me a bit about you and what you have in mind.
-              </p>
-
-              <label className="block space-y-1.5">
-                <span className="text-sm text-foreground">Your name</span>
-                <input
-                  type="text"
-                  name="name"
-                  autoComplete="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Alex"
-                  className="w-full rounded-md border border-border bg-[#0b0e14] px-3 py-2.5 text-sm text-foreground outline-none placeholder:text-foreground-muted/50 focus:border-primary"
-                />
-              </label>
-
-              <label className="block space-y-1.5">
-                <span className="text-sm text-foreground">Your email</span>
-                <input
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  className="w-full rounded-md border border-border bg-[#0b0e14] px-3 py-2.5 text-sm text-foreground outline-none placeholder:text-foreground-muted/50 focus:border-primary"
-                />
-              </label>
-
-              <label className="block space-y-1.5">
-                <span className="text-sm text-foreground">Message</span>
-                <textarea
-                  name="message"
-                  rows={5}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="What would you like to chat about?"
-                  className="min-h-[8rem] w-full resize-y rounded-md border border-border bg-[#0b0e14] px-3 py-2.5 text-sm text-foreground outline-none placeholder:text-foreground-muted/50 focus:border-primary"
-                />
-              </label>
-
-              <div
-                className="min-h-[1.25rem] text-sm"
-                aria-live="polite"
-              >
-                {status === "error" && error && (
-                  <p className="text-danger">{error}</p>
-                )}
-                {status === "sending" && (
-                  <p className="text-secondary">Opening your email app…</p>
-                )}
-                {status === "sent" && (
-                  <p className="text-primary">
-                    Almost done — finish sending in your email app. Thanks!
-                  </p>
-                )}
-              </div>
-
-              <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border/50 pt-5">
-                <p className="max-w-[14rem] text-xs text-foreground-muted">
-                  This opens your email app with the message ready to send.
-                </p>
-                <button
-                  type="submit"
-                  disabled={status === "sending"}
-                  className="btn gap-2 text-sm disabled:pointer-events-none disabled:opacity-55"
-                >
-                  <Send className="size-3.5" aria-hidden />
-                  Send message
-                </button>
-              </div>
-            </form>
+            <ContactInquiryForm />
           </div>
         </div>
       </div>
