@@ -41,7 +41,7 @@ function canonicalHostRedirect(request: NextRequest) {
   return NextResponse.redirect(url, 301);
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const hostRedirect = canonicalHostRedirect(request);
   if (hostRedirect) return hostRedirect;
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const SITE_NAME = "Raza Ali";
 export const SITE_LEGAL_NAME = "Raza Ali";
-export const SITE_TAGLINE = "Full Stack Developer (MERN / PERN)";
+export const SITE_TAGLINE = "Full Stack Developer (MERN & PERN)";
 export const SITE_OG_NAME = "Raza Ali — Portfolio";
 export const TWITTER_HANDLE = "@razaaliwebdev";
 

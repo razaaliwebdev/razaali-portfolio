@@ -34,14 +34,18 @@ export function contactHref(input?: {
   return qs ? `/contact?${qs}` : "/contact";
 }
 
-export function formatInquirySource(source: string, sourceRef?: string) {
+export function formatInquirySource(
+  source?: string | null,
+  sourceRef?: string | null,
+) {
+  const normalized = normalizeInquirySource(source);
   const ref = sourceRef?.trim();
-  if (source === "services") {
+  if (normalized === "services") {
     return ref ? `services · ${ref}` : "services";
   }
-  if (source === "projects") {
+  if (normalized === "projects") {
     return ref ? `projects · ${ref}` : "projects";
   }
-  if (source === "home") return "home";
+  if (normalized === "home") return "home";
   return "contact";
 }

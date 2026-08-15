@@ -17,19 +17,26 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const data = await getInquiry(id);
-  if (!data) {
+  try {
+    const data = await getInquiry(id);
+    if (!data) {
+      return {
+        title: "Inquiry not found",
+        robots: { index: false, follow: false },
+      };
+    }
+    const subject = data.inquiry.subject?.trim() || "Inquiry";
     return {
-      title: "Inquiry not found",
+      title: subject.slice(0, 60),
+      description: `Admin inquiry from ${data.inquiry.name}`,
+      robots: { index: false, follow: false },
+    };
+  } catch {
+    return {
+      title: "Inquiry",
       robots: { index: false, follow: false },
     };
   }
-  const subject = data.inquiry.subject?.trim() || "Inquiry";
-  return {
-    title: subject.slice(0, 60),
-    description: `Admin inquiry from ${data.inquiry.name}`,
-    robots: { index: false, follow: false },
-  };
 }
 
 export default async function AdminInquiryDetailPage({
@@ -38,11 +45,39 @@ export default async function AdminInquiryDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const data = await getInquiry(id);
+
+  let data: Awaited<ReturnType<typeof getInquiry>> = null;
+  try {
+    data = await getInquiry(id);
+  } catch {
+    return (
+      <AdminShell>
+        <TerminalPanel title="error" bodyClassName="space-y-3 p-4">
+          <p className="font-mono text-sm text-danger">
+            // failed to load inquiry
+          </p>
+          <p className="text-sm text-foreground-muted">
+            Database query failed. If you recently deployed inquiry source
+            tracking, run{" "}
+            <code className="text-primary">npm run db:seed</code> so{" "}
+            <code className="text-tertiary">source</code> /{" "}
+            <code className="text-tertiary">source_ref</code> columns exist,
+            then reload.
+          </p>
+        </TerminalPanel>
+      </AdminShell>
+    );
+  }
+
   if (!data) notFound();
 
-  await openInquiryIfNew(id);
-  const refreshed = (await getInquiry(id)) ?? data;
+  try {
+    await openInquiryIfNew(id);
+  } catch {
+    // Non-blocking: still show the message if status update fails
+  }
+
+  const refreshed = (await getInquiry(id).catch(() => null)) ?? data;
   const { inquiry, replies } = refreshed;
   const sourceLabel = formatInquirySource(inquiry.source, inquiry.sourceRef);
 

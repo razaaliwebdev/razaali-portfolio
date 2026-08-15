@@ -4,9 +4,21 @@
   "description": "Portfolio of Raza Ali, Full Stack Developer specializing in MERN / PERN.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d1117",
-  "theme_color": "#0d1117",
+  "background_color": "#0b0e14",
+  "theme_color": "#0b0e14",
   "icons": [
+    {
+      "src": "/icon",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-icon",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/favicon.ico",
       "sizes": "any",

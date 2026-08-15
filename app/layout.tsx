@@ -47,6 +47,11 @@ export const metadata: Metadata = {
     "Next.js Developer",
     "React Developer",
     "Node.js Developer",
+    "Raza Ali Software Engineer",
+    "Software Engineer",
+    "razaaliwebdev",
+    "razaali.dev",
+    "razaali",
     "Freelance Web Developer Lahore",
   ],
   authors: [{ name: SITE_NAME, url: site.origin }],
@@ -82,7 +87,11 @@ export const metadata: Metadata = {
     images: ["/opengraph-image"],
   },
   icons: {
-    icon: [{ url: "/favicon.ico", sizes: "any" }],
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon", type: "image/png", sizes: "48x48" },
+    ],
+    apple: [{ url: "/apple-icon", type: "image/png", sizes: "180x180" }],
   },
   manifest: "/site.webmanifest",
   alternates: {
