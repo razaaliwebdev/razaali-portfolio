@@ -1,13 +1,9 @@
 import type { MetadataRoute } from "next";
 import { listPublishedProjects } from "@/lib/actions/projects";
 import { listPublishedServices } from "@/lib/actions/services";
-import { absoluteUrl, allowSearchIndexing } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  if (!allowSearchIndexing()) {
-    return [];
-  }
-
   const now = new Date();
 
   const staticEntries: MetadataRoute.Sitemap = [
@@ -37,17 +33,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Fragment URLs are not separate indexable documents; list pages cover them.
-  // When project/service detail routes exist, append them from DB below.
-
   try {
     const [projects, services] = await Promise.all([
       listPublishedProjects(),
       listPublishedServices(),
     ]);
 
-    // Keep sitemap accurate: only real routes today are list pages.
-    // Use DB timestamps to freshen lastModified on list URLs when content changes.
     const projectUpdated = projects.reduce<Date | null>((latest, p) => {
       const d = p.updatedAt ? new Date(p.updatedAt) : null;
       if (!d) return latest;

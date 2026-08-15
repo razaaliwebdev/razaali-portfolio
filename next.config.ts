@@ -28,6 +28,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/sitemap",
+        destination: "/sitemap.xml",
+        permanent: true,
+      },
+      {
+        source: "/robots",
+        destination: "/robots.txt",
+        permanent: true,
+      },
+      {
         source: "/projects/:slug",
         destination: "/projects",
         permanent: false,
