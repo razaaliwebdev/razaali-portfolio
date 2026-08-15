@@ -1,4 +1,3 @@
-import { BootSplash } from "@/components/TerminalLoader";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { getAdminSession } from "@/lib/session";
@@ -11,11 +10,10 @@ export default async function SiteLayout({
   const session = await getAdminSession();
 
   return (
-    <>
-      <BootSplash />
+    <div className="flex min-h-dvh flex-col">
       <Header isAdmin={Boolean(session)} />
-      {children}
+      <div className="flex-1">{children}</div>
       <Footer />
-    </>
+    </div>
   );
 }

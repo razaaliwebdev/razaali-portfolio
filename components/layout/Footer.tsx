@@ -67,14 +67,14 @@ export default function Footer() {
       />
 
       {/* status rail */}
-      <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 border-b border-border/40 px-6 py-2 text-[10px] tracking-wide text-foreground-muted sm:justify-between md:px-12 lg:px-24">
+      <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 border-b border-border/40 px-6 py-2 text-[10px] tracking-wide text-[#a8b2c1] sm:justify-between md:px-12 lg:px-24">
         <span className="inline-flex items-center gap-1.5">
           <span className="size-1.5 rounded-full bg-primary shadow-[0_0_6px_var(--color-primary)]" />
           <span className="text-primary">online</span>
         </span>
         <span className="hidden sm:inline">lahore · utc+5</span>
         <span className="hidden md:inline">pid:portfolio</span>
-        <span className="font-medium text-foreground/70 sm:ml-auto">
+        <span className="font-medium text-foreground/85 sm:ml-auto">
           razaaliwebdev
         </span>
       </div>
@@ -88,7 +88,7 @@ export default function Footer() {
             <span className="mx-2 text-border">—</span>
             <span>v2.0</span>
           </p>
-          <p className="text-[11px] text-foreground-muted/80">
+          <p className="text-[11px] text-foreground-muted">
             Full Stack Engineer · MERN / PERN
           </p>
         </div>

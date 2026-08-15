@@ -113,8 +113,8 @@ export default function TerminalLoader({
   useEffect(() => {
     if (!done || !autoDismiss) return;
 
-    const hold = reduceMotion ? 120 : 600;
-    const exitMs = reduceMotion ? 200 : 700;
+    const hold = reduceMotion ? 60 : 120;
+    const exitMs = reduceMotion ? 120 : 220;
 
     const startMin = window.setTimeout(() => setMinimizing(true), hold);
     const finish = window.setTimeout(() => {
@@ -157,32 +157,25 @@ export default function TerminalLoader({
       />
 
       <motion.div
-        className="relative flex max-h-[min(88dvh,38rem)] w-full max-w-[34rem] flex-col overflow-hidden rounded-lg border border-border bg-background-panel font-mono text-[12px] leading-relaxed text-foreground will-change-transform sm:text-sm"
-        initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+        className="relative flex max-h-[min(88dvh,38rem)] w-full max-w-[34rem] flex-col overflow-hidden rounded-lg border border-border bg-background-panel font-mono text-[12px] leading-relaxed text-foreground sm:text-sm"
+        initial={false}
         animate={
           minimizing
             ? {
                 opacity: 0,
-                y: 56,
-                scale: 0.86,
-                filter: "blur(1.5px)",
               }
             : {
                 opacity: 1,
-                y: 0,
-                scale: 1,
-                filter: "blur(0px)",
               }
         }
         transition={
           minimizing
             ? {
-                duration: reduceMotion ? 0.2 : 0.68,
-                ease: [0.32, 0.72, 0, 1],
+                duration: reduceMotion ? 0.12 : 0.22,
+                ease: "easeOut",
               }
-            : { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
+            : { duration: 0.25, ease: [0.22, 1, 0.36, 1] }
         }
-        style={{ transformOrigin: "50% 100%" }}
       >
         <div className="relative flex shrink-0 items-center border-b border-border bg-background/40 px-3 py-2.5">
           <div className="z-10 flex items-center gap-1.5 sm:gap-2">
@@ -285,12 +278,23 @@ export default function TerminalLoader({
 
 export function BootSplash({
   blocks = 24,
-  duration = 2000,
+  duration = 700,
 }: Pick<TerminalLoaderProps, "blocks" | "duration">) {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
 
-  // Prevent browser restoring mid-page scroll, but honor hash deep-links (#skills)
   useEffect(() => {
+    try {
+      if (sessionStorage.getItem("razaali-boot-seen") === "1") {
+        setShow(false);
+        return;
+      }
+      sessionStorage.setItem("razaali-boot-seen", "1");
+      setShow(true);
+    } catch {
+      // Prefer skipping splash if storage is unavailable (faster first paint)
+      setShow(false);
+    }
+
     const prev = window.history.scrollRestoration;
     window.history.scrollRestoration = "manual";
     if (!window.location.hash) {

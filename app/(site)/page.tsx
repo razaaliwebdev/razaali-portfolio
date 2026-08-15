@@ -2,10 +2,15 @@ import type { Metadata } from "next";
 import Hero from "@/components/home/Hero";
 import About from "@/components/home/About";
 import Skills from "@/components/home/Skills";
-import Contributions from "@/components/home/Contributions";
 import Newsletter from "@/components/home/Newsletter";
+import ContributionsLazy from "@/components/home/ContributionsLazy";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { buildPageMetadata, personJsonLd, SITE_NAME, SITE_TAGLINE } from "@/lib/seo";
+import {
+  buildPageMetadata,
+  personJsonLd,
+  SITE_NAME,
+  SITE_TAGLINE,
+} from "@/lib/seo";
 
 const title = `${SITE_TAGLINE} | ${SITE_NAME}`;
 const description =
@@ -35,7 +40,7 @@ export default function Home() {
       <About />
       <Skills />
       <Newsletter />
-      <Contributions />
+      <ContributionsLazy />
     </main>
   );
 }

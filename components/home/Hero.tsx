@@ -314,8 +314,8 @@ function HeroIntro({ reduceMotion }: { reduceMotion: boolean | null }) {
         {reduceMotion && <Caret />}
       </h1>
 
-      {/* Headline */}
-      <div className="space-y-2 text-2xl font-semibold sm:text-3xl lg:text-[2rem] lg:leading-snug">
+      {/* Headline — reserved height avoids CLS while typewriter runs */}
+      <div className="min-h-[4.5rem] space-y-2 text-2xl font-semibold sm:min-h-[5.25rem] sm:text-3xl lg:min-h-[5.5rem] lg:text-[2rem] lg:leading-snug">
         <p>
           <span className="text-foreground">{lineA.shown}</span>
           {enableType &&
@@ -329,7 +329,9 @@ function HeroIntro({ reduceMotion }: { reduceMotion: boolean | null }) {
           ) : reduceMotion ? (
             PHRASES[0]
           ) : (
-            ""
+            <span className="invisible" aria-hidden>
+              {PHRASES[0]}
+            </span>
           )}
           {(lineA.done || reduceMotion) && <Caret />}
         </p>
@@ -352,10 +354,10 @@ function HeroIntro({ reduceMotion }: { reduceMotion: boolean | null }) {
               <motion.span
                 key={activeRole}
                 className="inline-block text-lg font-semibold text-primary sm:text-xl"
-                initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.28 }}
+                initial={reduceMotion ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
               >
                 {activeRole}
               </motion.span>
@@ -378,10 +380,11 @@ function HeroIntro({ reduceMotion }: { reduceMotion: boolean | null }) {
         >
           <span>git contact --verbose</span>
         </Link>
-        <div className="inline-flex items-center gap-2 border border-border px-3 py-2 text-xs text-foreground-muted">
-          <GitBranch className="size-3.5 text-primary" aria-hidden />
+        <div className="inline-flex min-w-[11.5rem] items-center gap-2 border border-border px-3 py-2 text-xs text-foreground-muted">
+          <GitBranch className="size-3.5 shrink-0 text-primary" aria-hidden />
           <span>
-            <CommitCount /> commits this year
+            <CommitCount className="inline-block min-w-[3.75ch] tabular-nums" />{" "}
+            commits this year
           </span>
         </div>
       </div>
@@ -408,20 +411,15 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 grid w-full grid-cols-1 gap-10 px-6 md:px-12 lg:grid-cols-2 lg:items-center lg:gap-12 lg:px-24">
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full min-w-0"
-        >
+        <div className="w-full min-w-0">
           <HeroIntro reduceMotion={reduceMotion} />
-        </motion.div>
+        </div>
 
         <motion.div
           className="relative w-full min-w-0"
-          initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+          initial={false}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         >
         <div className="ayu-mirage overflow-hidden rounded-md border border-[#141820] bg-[#1a1f2a] shadow-[0_16px_40px_rgba(0,0,0,0.5)]">
           <div className="border-b border-[#141820] bg-[#1a1f2a]">
@@ -459,7 +457,7 @@ export default function Hero() {
                     className={`relative px-3 py-2 text-[11px] transition-colors sm:text-xs ${
                       active
                         ? "text-[#cbccc6]"
-                        : "text-[#707a8c] hover:text-[#cbccc6]"
+                        : "text-[#a8b2c1] hover:text-[#cbccc6]"
                     }`}
                   >
                     {t.label}
@@ -497,11 +495,12 @@ export default function Hero() {
           </div>
 
           {/* Footer inside panel — no overlapping badge */}
-          <div className="flex items-center justify-between border-t border-[#141820] bg-[#1a1f2a] px-3 py-2 text-[10px] text-[#8b949e] sm:px-4 sm:text-[11px]">
+          <div className="flex items-center justify-between border-t border-[#141820] bg-[#1a1f2a] px-3 py-2 text-[10px] text-[#a8b2c1] sm:px-4 sm:text-[11px]">
             <span>UTF-8</span>
             <span className="inline-flex items-center gap-1.5 text-[#cbccc6]">
               <GitBranch className="size-3 text-[#bae67e]" aria-hidden />
-              <CommitCount /> commits
+              <CommitCount className="inline-block min-w-[3.75ch] tabular-nums" />{" "}
+              commits
             </span>
           </div>
         </div>
