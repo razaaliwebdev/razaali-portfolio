@@ -148,7 +148,9 @@ export function organizationJsonLd() {
     logo: absoluteUrl("/favicon.ico"),
     sameAs: [
       "https://github.com/razaaliwebdev",
-      "https://www.linkedin.com/in/razaaliwebdev",
+      "https://www.linkedin.com/in/razaali-dev/",
+      "https://www.instagram.com/razaali.dev/",
+      "https://www.threads.com/razaali.dev/",
       "https://x.com/razaaliwebdev",
     ],
     contactPoint: {
@@ -196,7 +198,9 @@ export function personJsonLd() {
     },
     sameAs: [
       "https://github.com/razaaliwebdev",
-      "https://www.linkedin.com/in/razaaliwebdev",
+      "https://www.linkedin.com/in/razaali-dev/",
+      "https://www.instagram.com/razaali.dev/",
+      "https://www.threads.com/razaali.dev/",
       "https://x.com/razaaliwebdev",
     ],
     knowsAbout: [
