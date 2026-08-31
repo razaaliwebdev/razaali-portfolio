@@ -88,7 +88,7 @@ const SOCIAL = [
   },
   {
     label: "X",
-    href: "https://x.com/razaaliwebdev",
+    href: "https://x.com/razaali_io",
     icon: XIcon,
   },
 ] as const;

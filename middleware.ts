@@ -5,6 +5,11 @@ import {
 } from "@/lib/auth";
 import { CANONICAL_HOST } from "@/lib/seo";
 
+/**
+ * Edge Middleware (required by @opennextjs/cloudflare).
+ * Next.js 16 prefers proxy.ts (Node), but OpenNext 1.20.2 still rejects
+ * Node middleware on Workers — keep middleware.ts until the adapter supports it.
+ */
 function canonicalHostRedirect(request: NextRequest) {
   const host = request.headers.get("host") ?? "";
   const hostname = host.split(":")[0]?.toLowerCase() ?? "";
@@ -41,7 +46,7 @@ function canonicalHostRedirect(request: NextRequest) {
   return NextResponse.redirect(url, 301);
 }
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const hostRedirect = canonicalHostRedirect(request);
   if (hostRedirect) return hostRedirect;
 
@@ -75,10 +80,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Host + HTTPS canonicalization for pages; skip static assets.
-     * Admin auth still applies under /admin.
-     */
     "/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)",
   ],
 };

@@ -140,6 +140,34 @@ export default function Contributions() {
     return () => ro.disconnect();
   }, [data]);
 
+  // Scale SVG heatmap so bottom row isn't clipped
+  useEffect(() => {
+    const el = calendarRef.current;
+    if (!el) return;
+
+    function scaleSvg() {
+      const svg = el?.querySelector("svg");
+      if (!svg) return;
+
+      const vb = svg.getAttribute("viewBox");
+      if (!vb) return;
+      const parts = vb.split(/\s+/).map(Number);
+      if (parts.length !== 3 || parts.some(Number.isNaN)) return;
+      const [, vbW, vbH] = parts;
+
+      const containerWidth = svg.getBoundingClientRect().width;
+      if (containerWidth <= 0) return;
+
+      svg.style.height = `${(containerWidth * vbH) / vbW}px`;
+    }
+
+    scaleSvg();
+
+    const ro = new ResizeObserver(scaleSvg);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [data, showWeekdayLabels]);
+
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);

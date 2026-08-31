@@ -151,7 +151,7 @@ export function organizationJsonLd() {
       "https://www.linkedin.com/in/razaali-dev/",
       "https://www.instagram.com/razaali.dev/",
       "https://www.threads.com/razaali.dev/",
-      "https://x.com/razaaliwebdev",
+      "https://x.com/razaali_io",
     ],
     contactPoint: {
       "@type": "ContactPoint",
@@ -201,7 +201,7 @@ export function personJsonLd() {
       "https://www.linkedin.com/in/razaali-dev/",
       "https://www.instagram.com/razaali.dev/",
       "https://www.threads.com/razaali.dev/",
-      "https://x.com/razaaliwebdev",
+      "https://x.com/razaali_io",
     ],
     knowsAbout: [
       "Full Stack Development",

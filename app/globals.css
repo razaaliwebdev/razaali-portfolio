@@ -17,6 +17,11 @@
   --color-danger: #f85149;
 }
 
+::selection {
+  background: color-mix(in srgb, var(--color-primary) 40%, transparent);
+  color: #ffffff;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-background-panel: var(--background-panel);
@@ -176,8 +181,7 @@ body {
 .contrib-heatmap .react-activity-calendar__scroll-container {
   width: 100% !important;
   max-width: none !important;
-  overflow-x: hidden !important;
-  overflow-y: visible !important;
+  overflow: visible !important;
 }
 
 .contrib-heatmap .react-activity-calendar__calendar {
