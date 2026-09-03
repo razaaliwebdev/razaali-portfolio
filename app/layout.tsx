@@ -96,7 +96,7 @@ export const metadata: Metadata = {
     images: ["/opengraph-image"],
   },
   icons: {
-    icon: [{ url: "/icon", type: "image/png", sizes: "48x48" }],
+    icon: [{ url: "/favicon.ico", sizes: "any" }],
     apple: [{ url: "/apple-icon", type: "image/png", sizes: "180x180" }],
   },
   manifest: "/site.webmanifest",
