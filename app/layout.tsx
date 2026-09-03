@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { JetBrains_Mono, Victor_Mono } from "next/font/google";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
@@ -41,6 +42,9 @@ export const metadata: Metadata = {
   applicationName: SITE_OG_NAME,
   keywords: [
     "Raza Ali",
+    "Raza",
+    "Ali",
+    "Full Stack Web Developer",
     "Full Stack Developer",
     "MERN Stack Developer",
     "PERN Stack Developer",
@@ -53,6 +57,11 @@ export const metadata: Metadata = {
     "razaali.dev",
     "razaali",
     "Freelance Web Developer Lahore",
+    "Raza Ali s/o Baagh Ali",
+    "Baagh Ali",
+    "Bagh Ali",
+    "Web Developer in Pakistan",
+    "Pakistan",
   ],
   authors: [{ name: SITE_NAME, url: site.origin }],
   creator: SITE_NAME,
@@ -87,10 +96,7 @@ export const metadata: Metadata = {
     images: ["/opengraph-image"],
   },
   icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon", type: "image/png", sizes: "48x48" },
-    ],
+    icon: [{ url: "/icon", type: "image/png", sizes: "48x48" }],
     apple: [{ url: "/apple-icon", type: "image/png", sizes: "180x180" }],
   },
   manifest: "/site.webmanifest",
@@ -118,6 +124,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col bg-background font-mono text-foreground">
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         {children}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-CMXD69Q5YX"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-CMXD69Q5YX');
+          `}
+        </Script>
       </body>
     </html>
   );

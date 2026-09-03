@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { FileText } from "lucide-react";
-import { PixelatedCanvas } from "@/components/ui/pixelated-canvas";
 
 const PROFILE_SRC = "/images/raza.jpg";
 
@@ -129,31 +128,13 @@ export default function About() {
             </div>
           </article>
 
-          {/* Pixelated profile — stretches to match README height */}
+          {/* Profile photo */}
           <article className="mx-auto flex h-full w-full max-w-[20rem] flex-col overflow-hidden rounded-md border border-border bg-[#0f131a] lg:mx-0 lg:max-w-none">
-            <WindowChrome title="profile.px" />
+            <WindowChrome title="profile.jpg" />
             <div className="flex min-h-0 flex-1 items-center justify-center bg-black">
-              <PixelatedCanvas
+              <img
                 src={PROFILE_SRC}
-                width={320}
-                height={400}
-                cellSize={3}
-                dotScale={0.9}
-                shape="square"
-                backgroundColor="#000000"
-                dropoutStrength={0.35}
-                interactive
-                distortionStrength={3}
-                distortionRadius={80}
-                distortionMode="swirl"
-                followSpeed={0.2}
-                jitterStrength={4}
-                jitterSpeed={4}
-                sampleAverage
-                objectFit="cover"
-                tintColor="#3fb950"
-                tintStrength={0.12}
-                ariaLabel="Portrait of Raza Ali, full stack developer"
+                alt="Portrait of Raza Ali, full stack developer"
                 className="block h-full max-h-full w-full max-w-full object-contain"
               />
             </div>
