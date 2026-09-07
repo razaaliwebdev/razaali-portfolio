@@ -1,11 +1,33 @@
 "use client";
 
+import Script from "next/script";
 import { useActionState, useEffect, useId, useRef, useState } from "react";
 import { CheckCircle2, X } from "lucide-react";
 import {
   submitInquiry,
   type SubmitInquiryState,
 } from "@/lib/actions/inquiries";
+
+type TurnstileWidgetId = string;
+
+declare global {
+  interface Window {
+    turnstile: {
+      render: (
+        container: HTMLElement,
+        options: {
+          sitekey: string;
+          action: string;
+          appearance?: "always" | "execute" | "interaction-only";
+          callback: (token: string) => void;
+          "error-callback": () => void;
+          "expired-callback": () => void;
+        },
+      ) => TurnstileWidgetId;
+      reset: (widgetId: TurnstileWidgetId) => void;
+    };
+  }
+}
 
 const MAC_DOTS = {
   close: "#FF5F57",
@@ -126,20 +148,48 @@ export default function ContactInquiryForm({
     FormData
   >(submitInquiry, {});
   const formRef = useRef<HTMLFormElement>(null);
+  const turnstileContainer = useRef<HTMLDivElement>(null);
+  const widgetIdRef = useRef<TurnstileWidgetId | null>(null);
+  const [token, setToken] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const lastOk = useRef(false);
+
+  function renderTurnstile() {
+    if (!turnstileContainer.current || widgetIdRef.current !== null) return;
+    widgetIdRef.current = window.turnstile.render(turnstileContainer.current, {
+      sitekey: "0x4AAAAAAErvrcTWQWl9AcxO",
+      action: "contact",
+      appearance: "always",
+      callback: setToken,
+      "error-callback": () => setToken(""),
+      "expired-callback": () => setToken(""),
+    });
+  }
+
+  function resetTurnstile() {
+    if (widgetIdRef.current !== null) {
+      window.turnstile.reset(widgetIdRef.current);
+      setToken("");
+    }
+  }
 
   useEffect(() => {
     if (state.ok && !lastOk.current) {
       lastOk.current = true;
       formRef.current?.reset();
       setModalOpen(true);
+      resetTurnstile();
     }
     if (!state.ok) lastOk.current = false;
   }, [state]);
 
   return (
     <>
+      <Script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+        strategy="afterInteractive"
+        onReady={renderTurnstile}
+      />
       <form
         ref={formRef}
         action={action}
@@ -148,6 +198,7 @@ export default function ContactInquiryForm({
       >
         <input type="hidden" name="source" defaultValue={source} />
         <input type="hidden" name="sourceRef" defaultValue={sourceRef} />
+        <input type="hidden" name="cf-turnstile-response" value={token} />
 
         <p className="text-sm text-foreground-muted">
           Tell me a bit about you and what you have in mind.
@@ -212,6 +263,8 @@ export default function ContactInquiryForm({
           ) : null}
         </div>
 
+        <div ref={turnstileContainer} className="flex justify-center" />
+
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border/50 pt-5">
           <p className="max-w-[16rem] text-xs text-foreground-muted">
             Valid emails get a confirmation message. I also get notified in
@@ -219,7 +272,7 @@ export default function ContactInquiryForm({
           </p>
           <button
             type="submit"
-            disabled={pending}
+            disabled={pending || !token}
             className="btn gap-2 text-sm disabled:pointer-events-none disabled:opacity-55"
           >
             {pending ? "Sending…" : "Send message"}

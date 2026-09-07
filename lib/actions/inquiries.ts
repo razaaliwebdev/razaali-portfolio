@@ -1,6 +1,7 @@
 "use server";
 
-import { and, count, desc, eq } from "drizzle-orm";
+import { headers } from "next/headers";
+import { and, count, desc, eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db, withDbRetry } from "@/db";
 import {
@@ -54,6 +55,44 @@ export async function submitInquiry(
     return { error: "Subject is too long." };
   }
 
+  const turnstileToken = String(formData.get("cf-turnstile-response") ?? "");
+  if (!turnstileToken || turnstileToken.length > 2048) {
+    return { error: "Please complete the verification." };
+  }
+
+  const secret = process.env.TURNSTILE_SECRET;
+  if (!secret) {
+    console.error("[turnstile] TURNSTILE_SECRET is not set");
+    return { error: "Verification is not configured." };
+  }
+
+  const headerStore = await headers();
+  const remoteip = headerStore.get("x-forwarded-for")?.split(",")[0]?.trim() ?? undefined;
+
+  try {
+    const r = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        signal: AbortSignal.timeout(10_000),
+        body: new URLSearchParams({
+          secret,
+          response: turnstileToken,
+          ...(remoteip ? { remoteip } : {}),
+        }),
+      },
+    );
+    const result = await r.json();
+    if (!r.ok || !result.success) {
+      console.error("[turnstile] verification failed:", result);
+      return { error: "Verification failed. Please try again." };
+    }
+  } catch (err) {
+    console.error("[turnstile] siteverify request failed:", err);
+    return { error: "Verification failed. Please try again." };
+  }
+
   try {
     const [row] = await db
       .insert(inquiries)
@@ -89,8 +128,8 @@ export async function submitInquiry(
             updatedAt: new Date(),
           })
           .where(eq(inquiries.id, row.id));
-      } catch {
-        // Inquiry is saved; confirmation email is best-effort.
+      } catch (err) {
+        console.error("[mail] confirmation email failed:", err);
       }
 
       const notifyTo = adminNotifyEmail();
@@ -112,8 +151,8 @@ export async function submitInquiry(
             html: alert.html,
             replyTo: email,
           });
-        } catch {
-          // Non-blocking for the visitor.
+        } catch (err) {
+          console.error("[mail] admin alert email failed:", err);
         }
       }
     }
@@ -255,7 +294,8 @@ export async function replyToInquiry(
     revalidatePath("/admin/inquiries");
     revalidatePath(`/admin/inquiries/${id}`);
     return { ok: true };
-  } catch {
+  } catch (err) {
+    console.error("[mail] reply email failed:", err);
     return { error: "Failed to send email. Check SMTP settings." };
   }
 }
@@ -263,6 +303,14 @@ export async function replyToInquiry(
 export async function deleteInquiry(id: string) {
   await requireAdmin();
   await db.delete(inquiries).where(eq(inquiries.id, id));
+  revalidatePath("/admin");
+  revalidatePath("/admin/inquiries");
+}
+
+export async function deleteInquiries(ids: string[]) {
+  await requireAdmin();
+  if (ids.length === 0) return;
+  await db.delete(inquiries).where(inArray(inquiries.id, ids));
   revalidatePath("/admin");
   revalidatePath("/admin/inquiries");
 }

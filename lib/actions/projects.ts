@@ -1,6 +1,6 @@
 "use server";
 
-import { asc, count, eq } from "drizzle-orm";
+import { asc, count, eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db, withDbRetry } from "@/db";
 import { projects } from "@/db/schema";
@@ -132,6 +132,14 @@ export async function upsertProject(
 export async function deleteProject(id: string) {
   await requireAdmin();
   await db.delete(projects).where(eq(projects.id, id));
+  revalidatePath("/admin");
+  revalidatePath("/admin/projects");
+}
+
+export async function deleteProjects(ids: string[]) {
+  await requireAdmin();
+  if (ids.length === 0) return;
+  await db.delete(projects).where(inArray(projects.id, ids));
   revalidatePath("/admin");
   revalidatePath("/admin/projects");
 }

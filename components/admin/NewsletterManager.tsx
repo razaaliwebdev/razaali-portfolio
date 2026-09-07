@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useTransition } from "react";
+import { useActionState, useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   deleteSubscriber,
+  deleteSubscribers,
   sendNewsletterBroadcast,
   setSubscriberStatus,
   type BroadcastState,
@@ -12,11 +13,14 @@ import type {
   NewsletterCampaign,
   NewsletterSubscriber,
 } from "@/db/schema";
+import { Pagination } from "@/components/admin/Pagination";
 import {
   adminFieldClass,
   adminLabelClass,
   TerminalPanel,
 } from "@/components/admin/TerminalUi";
+
+const PAGE_SIZE = 20;
 
 export function NewsletterManager({
   subscribers,
@@ -34,6 +38,8 @@ export function NewsletterManager({
   const router = useRouter();
   const [, startTransition] = useTransition();
   const done = useRef(false);
+  const [subPage, setSubPage] = useState(1);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (state.ok && !done.current) {
@@ -42,6 +48,11 @@ export function NewsletterManager({
     }
     if (!state.ok) done.current = false;
   }, [state, router]);
+
+  const subPageItems = subscribers.slice(
+    (subPage - 1) * PAGE_SIZE,
+    subPage * PAGE_SIZE,
+  );
 
   return (
     <div className="space-y-6">
@@ -127,9 +138,71 @@ export function NewsletterManager({
       </TerminalPanel>
 
       <TerminalPanel title="subscribers · ls" bodyClassName="overflow-x-auto">
+        {selected.size > 0 && (
+          <div className="flex items-center gap-3 border-b border-border px-3 py-2">
+            <span className="font-mono text-xs text-danger">
+              {selected.size} selected
+            </span>
+            <button
+              type="button"
+              className="font-mono text-xs text-danger underline"
+              onClick={() => {
+                if (
+                  !window.confirm(
+                    `Delete ${selected.size} selected subscriber(s)?`,
+                  )
+                )
+                  return;
+                const ids = Array.from(selected);
+                startTransition(async () => {
+                  await deleteSubscribers(ids);
+                  setSelected(new Set());
+                  router.refresh();
+                });
+              }}
+            >
+              delete selected
+            </button>
+            <button
+              type="button"
+              className="font-mono text-xs text-foreground-muted"
+              onClick={() => setSelected(new Set())}
+            >
+              clear
+            </button>
+          </div>
+        )}
         <table className="w-full min-w-[40rem] text-left text-sm">
           <thead className="border-b border-border font-mono text-[11px] text-foreground-muted">
             <tr>
+              <th className="w-10 px-3 py-2">
+                <input
+                  type="checkbox"
+                  checked={
+                    subPageItems.length > 0 &&
+                    subPageItems.every((s) => selected.has(s.id))
+                  }
+                  onChange={() => {
+                    if (
+                      subPageItems.length > 0 &&
+                      subPageItems.every((s) => selected.has(s.id))
+                    ) {
+                      setSelected((prev) => {
+                        const next = new Set(prev);
+                        for (const s of subPageItems) next.delete(s.id);
+                        return next;
+                      });
+                    } else {
+                      setSelected((prev) => {
+                        const next = new Set(prev);
+                        for (const s of subPageItems) next.add(s.id);
+                        return next;
+                      });
+                    }
+                  }}
+                  className="accent-primary"
+                />
+              </th>
               <th className="px-3 py-2 font-medium">email</th>
               <th className="px-3 py-2 font-medium">status</th>
               <th className="px-3 py-2 font-medium">joined</th>
@@ -137,18 +210,38 @@ export function NewsletterManager({
             </tr>
           </thead>
           <tbody>
-            {subscribers.length === 0 ? (
+            {subPageItems.length === 0 ? (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={5}
                   className="px-3 py-8 font-mono text-foreground-muted"
                 >
                   // no subscribers yet
                 </td>
               </tr>
             ) : (
-              subscribers.map((sub) => (
-                <tr key={sub.id} className="border-b border-border/60">
+              subPageItems.map((sub) => (
+                <tr
+                  key={sub.id}
+                  className={`border-b border-border/60 ${
+                    selected.has(sub.id) ? "bg-primary/5" : ""
+                  }`}
+                >
+                  <td className="px-3 py-3">
+                    <input
+                      type="checkbox"
+                      checked={selected.has(sub.id)}
+                      onChange={() => {
+                        setSelected((prev) => {
+                          const next = new Set(prev);
+                          if (next.has(sub.id)) next.delete(sub.id);
+                          else next.add(sub.id);
+                          return next;
+                        });
+                      }}
+                      className="accent-primary"
+                    />
+                  </td>
                   <td className="px-3 py-3 font-mono text-xs text-foreground">
                     {sub.email}
                   </td>
@@ -195,7 +288,8 @@ export function NewsletterManager({
                         type="button"
                         className="font-mono text-xs text-danger"
                         onClick={() => {
-                          if (!window.confirm("Delete this subscriber?")) return;
+                          if (!window.confirm("Delete this subscriber?"))
+                            return;
                           startTransition(async () => {
                             await deleteSubscriber(sub.id);
                             router.refresh();
@@ -211,6 +305,12 @@ export function NewsletterManager({
             )}
           </tbody>
         </table>
+        <Pagination
+          page={subPage}
+          total={subscribers.length}
+          pageSize={PAGE_SIZE}
+          onPageChange={setSubPage}
+        />
       </TerminalPanel>
 
       <TerminalPanel title="campaigns · history" bodyClassName="overflow-x-auto">

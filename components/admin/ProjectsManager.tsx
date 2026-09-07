@@ -6,15 +6,19 @@ import { useRouter } from "next/navigation";
 import {
   upsertProject,
   deleteProject,
+  deleteProjects,
   toggleProjectPublished,
   type ProjectFormState,
 } from "@/lib/actions/projects";
 import type { Project } from "@/db/schema";
+import { Pagination } from "@/components/admin/Pagination";
 import {
   adminFieldClass,
   adminLabelClass,
   TerminalPanel,
 } from "@/components/admin/TerminalUi";
+
+const PAGE_SIZE = 20;
 
 export function ProjectEditor({
   initial,
@@ -157,6 +161,13 @@ export function ProjectsManager({ items }: { items: Project[] }) {
   const [creating, setCreating] = useState(false);
   const router = useRouter();
   const [, startTransition] = useTransition();
+  const [projPage, setProjPage] = useState(1);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  const projPageItems = items.slice(
+    (projPage - 1) * PAGE_SIZE,
+    projPage * PAGE_SIZE,
+  );
 
   return (
     <div className="space-y-4">
@@ -181,9 +192,71 @@ export function ProjectsManager({ items }: { items: Project[] }) {
       ) : null}
 
       <TerminalPanel title="projects · ls" bodyClassName="overflow-x-auto">
+        {selected.size > 0 && (
+          <div className="flex items-center gap-3 border-b border-border px-3 py-2">
+            <span className="font-mono text-xs text-danger">
+              {selected.size} selected
+            </span>
+            <button
+              type="button"
+              className="font-mono text-xs text-danger underline"
+              onClick={() => {
+                if (
+                  !window.confirm(
+                    `Delete ${selected.size} selected project(s)?`,
+                  )
+                )
+                  return;
+                const ids = Array.from(selected);
+                startTransition(async () => {
+                  await deleteProjects(ids);
+                  setSelected(new Set());
+                  router.refresh();
+                });
+              }}
+            >
+              delete selected
+            </button>
+            <button
+              type="button"
+              className="font-mono text-xs text-foreground-muted"
+              onClick={() => setSelected(new Set())}
+            >
+              clear
+            </button>
+          </div>
+        )}
         <table className="w-full min-w-[40rem] text-left text-sm">
           <thead className="border-b border-border font-mono text-[11px] text-foreground-muted">
             <tr>
+              <th className="w-10 px-3 py-2">
+                <input
+                  type="checkbox"
+                  checked={
+                    projPageItems.length > 0 &&
+                    projPageItems.every((i) => selected.has(i.id))
+                  }
+                  onChange={() => {
+                    if (
+                      projPageItems.length > 0 &&
+                      projPageItems.every((i) => selected.has(i.id))
+                    ) {
+                      setSelected((prev) => {
+                        const next = new Set(prev);
+                        for (const i of projPageItems) next.delete(i.id);
+                        return next;
+                      });
+                    } else {
+                      setSelected((prev) => {
+                        const next = new Set(prev);
+                        for (const i of projPageItems) next.add(i.id);
+                        return next;
+                      });
+                    }
+                  }}
+                  className="accent-primary"
+                />
+              </th>
               <th className="px-3 py-2 font-medium">title</th>
               <th className="px-3 py-2 font-medium">tech</th>
               <th className="px-3 py-2 font-medium">flags</th>
@@ -191,18 +264,38 @@ export function ProjectsManager({ items }: { items: Project[] }) {
             </tr>
           </thead>
           <tbody>
-            {items.length === 0 ? (
+            {projPageItems.length === 0 ? (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={5}
                   className="px-3 py-6 font-mono text-foreground-muted"
                 >
                   // empty — create your first project
                 </td>
               </tr>
             ) : (
-              items.map((item) => (
-                <tr key={item.id} className="border-b border-border/60">
+              projPageItems.map((item) => (
+                <tr
+                  key={item.id}
+                  className={`border-b border-border/60 ${
+                    selected.has(item.id) ? "bg-primary/5" : ""
+                  }`}
+                >
+                  <td className="px-3 py-3">
+                    <input
+                      type="checkbox"
+                      checked={selected.has(item.id)}
+                      onChange={() => {
+                        setSelected((prev) => {
+                          const next = new Set(prev);
+                          if (next.has(item.id)) next.delete(item.id);
+                          else next.add(item.id);
+                          return next;
+                        });
+                      }}
+                      className="accent-primary"
+                    />
+                  </td>
                   <td className="px-3 py-3">
                     <p className="text-foreground">{item.title}</p>
                     <p className="font-mono text-[10px] text-tertiary">
@@ -275,6 +368,12 @@ export function ProjectsManager({ items }: { items: Project[] }) {
             )}
           </tbody>
         </table>
+        <Pagination
+          page={projPage}
+          total={items.length}
+          pageSize={PAGE_SIZE}
+          onPageChange={setProjPage}
+        />
       </TerminalPanel>
     </div>
   );

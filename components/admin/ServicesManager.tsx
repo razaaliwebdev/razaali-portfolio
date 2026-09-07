@@ -6,15 +6,19 @@ import { useRouter } from "next/navigation";
 import {
   upsertService,
   deleteService,
+  deleteServices,
   toggleServicePublished,
   type ServiceFormState,
 } from "@/lib/actions/services";
 import type { Service } from "@/db/schema";
+import { Pagination } from "@/components/admin/Pagination";
 import {
   adminFieldClass,
   adminLabelClass,
   TerminalPanel,
 } from "@/components/admin/TerminalUi";
+
+const PAGE_SIZE = 20;
 
 export function ServiceEditor({
   initial,
@@ -116,6 +120,13 @@ export function ServicesManager({ items }: { items: Service[] }) {
   const [creating, setCreating] = useState(false);
   const router = useRouter();
   const [, startTransition] = useTransition();
+  const [svcPage, setSvcPage] = useState(1);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  const svcPageItems = items.slice(
+    (svcPage - 1) * PAGE_SIZE,
+    svcPage * PAGE_SIZE,
+  );
 
   return (
     <div className="space-y-4">
@@ -147,9 +158,69 @@ export function ServicesManager({ items }: { items: Service[] }) {
       ) : null}
 
       <TerminalPanel title="services · ls" bodyClassName="overflow-x-auto">
+        {selected.size > 0 && (
+          <div className="flex items-center gap-3 border-b border-border px-3 py-2">
+            <span className="font-mono text-xs text-danger">
+              {selected.size} selected
+            </span>
+            <button
+              type="button"
+              className="font-mono text-xs text-danger underline"
+              onClick={() => {
+                if (
+                  !window.confirm(`Delete ${selected.size} selected service(s)?`)
+                )
+                  return;
+                const ids = Array.from(selected);
+                startTransition(async () => {
+                  await deleteServices(ids);
+                  setSelected(new Set());
+                  router.refresh();
+                });
+              }}
+            >
+              delete selected
+            </button>
+            <button
+              type="button"
+              className="font-mono text-xs text-foreground-muted"
+              onClick={() => setSelected(new Set())}
+            >
+              clear
+            </button>
+          </div>
+        )}
         <table className="w-full min-w-[36rem] text-left text-sm">
           <thead className="border-b border-border font-mono text-[11px] text-foreground-muted">
             <tr>
+              <th className="w-10 px-3 py-2">
+                <input
+                  type="checkbox"
+                  checked={
+                    svcPageItems.length > 0 &&
+                    svcPageItems.every((i) => selected.has(i.id))
+                  }
+                  onChange={() => {
+                    if (
+                      svcPageItems.length > 0 &&
+                      svcPageItems.every((i) => selected.has(i.id))
+                    ) {
+                      setSelected((prev) => {
+                        const next = new Set(prev);
+                        for (const i of svcPageItems) next.delete(i.id);
+                        return next;
+                      });
+                    } else {
+                      setSelected((prev) => {
+                        const next = new Set(prev);
+                        for (const i of svcPageItems) next.add(i.id);
+                        return next;
+                      });
+                    }
+                  }}
+                  className="accent-primary"
+                />
+              </th>
               <th className="px-3 py-2 font-medium">title</th>
               <th className="px-3 py-2 font-medium">slug</th>
               <th className="px-3 py-2 font-medium">status</th>
@@ -157,18 +228,38 @@ export function ServicesManager({ items }: { items: Service[] }) {
             </tr>
           </thead>
           <tbody>
-            {items.length === 0 ? (
+            {svcPageItems.length === 0 ? (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={5}
                   className="px-3 py-6 font-mono text-foreground-muted"
                 >
                   // empty — create your first service
                 </td>
               </tr>
             ) : (
-              items.map((item) => (
-                <tr key={item.id} className="border-b border-border/60">
+              svcPageItems.map((item) => (
+                <tr
+                  key={item.id}
+                  className={`border-b border-border/60 ${
+                    selected.has(item.id) ? "bg-primary/5" : ""
+                  }`}
+                >
+                  <td className="px-3 py-3">
+                    <input
+                      type="checkbox"
+                      checked={selected.has(item.id)}
+                      onChange={() => {
+                        setSelected((prev) => {
+                          const next = new Set(prev);
+                          if (next.has(item.id)) next.delete(item.id);
+                          else next.add(item.id);
+                          return next;
+                        });
+                      }}
+                      className="accent-primary"
+                    />
+                  </td>
                   <td className="px-3 py-3 text-foreground">{item.title}</td>
                   <td className="px-3 py-3 font-mono text-xs text-tertiary">
                     {item.slug}
@@ -235,6 +326,12 @@ export function ServicesManager({ items }: { items: Service[] }) {
             )}
           </tbody>
         </table>
+        <Pagination
+          page={svcPage}
+          total={items.length}
+          pageSize={PAGE_SIZE}
+          onPageChange={setSvcPage}
+        />
       </TerminalPanel>
     </div>
   );

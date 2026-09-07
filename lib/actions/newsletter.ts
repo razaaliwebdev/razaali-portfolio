@@ -1,7 +1,7 @@
 "use server";
 
 import { createHash, randomBytes } from "crypto";
-import { count, desc, eq } from "drizzle-orm";
+import { count, desc, eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db, withDbRetry } from "@/db";
 import {
@@ -114,8 +114,8 @@ export async function subscribeNewsletter(
             updatedAt: new Date(),
           })
           .where(eq(newsletterSubscribers.id, subscriberId));
-      } catch {
-        // subscription saved; mail is best-effort
+      } catch (err) {
+        console.error("[mail] newsletter welcome email failed:", err);
       }
     }
 
@@ -217,6 +217,15 @@ export async function deleteSubscriber(id: string) {
   revalidatePath("/admin/newsletter");
 }
 
+export async function deleteSubscribers(ids: string[]) {
+  await requireAdmin();
+  if (ids.length === 0) return;
+  await db
+    .delete(newsletterSubscribers)
+    .where(inArray(newsletterSubscribers.id, ids));
+  revalidatePath("/admin/newsletter");
+}
+
 export type BroadcastState = {
   ok?: boolean;
   error?: string;
@@ -269,7 +278,8 @@ export async function sendNewsletterBroadcast(
       sentCount += 1;
       // gentle pacing for Gmail SMTP limits
       await new Promise((r) => setTimeout(r, 350));
-    } catch {
+    } catch (err) {
+      console.error("[mail] broadcast send failed for", sub.email, err);
       failedCount += 1;
     }
   }
