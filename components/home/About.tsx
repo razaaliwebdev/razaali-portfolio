@@ -131,11 +131,11 @@ export default function About() {
           {/* Profile photo */}
           <article className="mx-auto flex h-full w-full max-w-[20rem] flex-col overflow-hidden rounded-md border border-border bg-[#0f131a] lg:mx-0 lg:max-w-none">
             <WindowChrome title="profile.png" />
-            <div className="flex min-h-0 flex-1 items-center justify-center bg-black">
+            <div className="flex min-h-0 flex-1 items-center justify-center bg-background">
               <img
                 src={PROFILE_SRC}
                 alt="Portrait of Raza Ali, full stack developer"
-                className="block h-full max-h-full w-full max-w-full object-contain"
+                className="block h-full max-h-full w-full max-w-full object-contain mix-blend-lighten"
               />
             </div>
           </article>
