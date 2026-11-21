@@ -79,36 +79,35 @@ export default function About() {
             />
             <div className="flex flex-1 flex-col gap-4 p-4 font-mono text-[13px] leading-relaxed text-foreground sm:p-5 sm:text-sm">
               <p>
-                Hello — I&apos;m{" "}
-                <span className="text-primary">Raza Ali</span>, a full stack
-                engineer focused on reliable MERN / PERN apps. My path started
-                tinkering with systems and grew into shipping clean web products
-                end to end.
+                Hello — I&apos;m <span className="text-primary">Raza Ali</span>,
+                a full stack engineer who ships real MERN apps. I started by
+                tinkering with systems and grew into delivering clean web
+                products end to end.
               </p>
 
               <blockquote className="border-l-2 border-primary pl-3 text-foreground-muted">
-                &ldquo;Simplicity is the ultimate sophistication.&rdquo;
+                &ldquo;Ship it, then make it better.&rdquo;
               </blockquote>
 
               <ul className="space-y-1.5 text-primary">
                 <li>
-                  <span className="text-foreground-muted">›</span> Strong focus
-                  on clean architecture.
+                  <span className="text-foreground-muted">›</span> Built
+                  Sello.pk, Pakistan&apos;s live car marketplace.
                 </li>
                 <li>
-                  <span className="text-foreground-muted">›</span> Bridging
-                  backend logic with sharp UI.
+                  <span className="text-foreground-muted">›</span> Shipped JWT
+                  auth, Docker and CI/CD pipelines.
                 </li>
                 <li>
-                  <span className="text-foreground-muted">›</span> Continuous
-                  learner in an evolving stack.
+                  <span className="text-foreground-muted">›</span> Delivered 3
+                  live client platforms, end to end.
                 </li>
               </ul>
 
               <div className="mt-auto space-y-2 border-t border-border/50 pt-4 text-[12px] text-foreground-muted sm:text-[13px]">
                 <p>
-                  <span className="text-tertiary">Core Focus:</span> Scalable APIs
-                  &amp; React interfaces
+                  <span className="text-tertiary">Core Focus:</span> Scalable
+                  APIs &amp; React interfaces
                 </p>
                 <p>
                   <span className="text-tertiary">Current Obsession:</span>{" "}
