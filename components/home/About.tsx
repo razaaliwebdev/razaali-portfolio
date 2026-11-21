@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
 import { FileText } from "lucide-react";
+import Image from "next/image";
 
 const PROFILE_SRC = "/images/raza.png";
+// const PROFILE_SRC = "@/public/images/raza.png";
 
 const MAC_DOTS = {
   close: "#FF5F57",
@@ -16,13 +18,7 @@ const STATS = [
   { key: "available", value: "true", tone: "bool" as const },
 ];
 
-function WindowChrome({
-  title,
-  icon,
-}: {
-  title: string;
-  icon?: ReactNode;
-}) {
+function WindowChrome({ title, icon }: { title: string; icon?: ReactNode }) {
   return (
     <div className="flex items-center gap-2 border-b border-border bg-[#1a1f2a] px-3 py-2">
       <div className="flex shrink-0 gap-1">
@@ -128,13 +124,16 @@ export default function About() {
           </article>
 
           {/* Profile photo */}
-          <article className="mx-auto flex w-full max-w-[20rem] flex-col self-start overflow-hidden rounded-md border border-border bg-[#0f131a] lg:mx-0 lg:max-w-none">
+          <article className="mx-auto flex w-full max-w-[20rem] flex-col overflow-hidden rounded-md border border-border bg-[#0f131a] lg:mx-0 lg:h-full lg:max-w-none">
             <WindowChrome title="profile.png" />
-            <div className="bg-background px-0.5">
-              <img
+            <div className="relative aspect-4/5 w-full flex-1 bg-background lg:aspect-auto">
+              <Image
                 src={PROFILE_SRC}
                 alt="Portrait of Raza Ali, full stack developer"
-                className="block h-auto w-full"
+                fill
+                priority
+                sizes="(min-width: 1024px) 20rem, 100vw"
+                className="object-cover object-top"
               />
             </div>
           </article>
@@ -147,7 +146,9 @@ export default function About() {
               key={stat.key}
               className="rounded-md border border-border bg-[#0f131a] px-3 py-3 font-mono text-[12px] sm:px-4 sm:text-[13px]"
             >
-              <span className="text-foreground-muted">&quot;{stat.key}&quot;</span>
+              <span className="text-foreground-muted">
+                &quot;{stat.key}&quot;
+              </span>
               <span className="text-foreground-muted">: </span>
               <span
                 className={
