@@ -416,7 +416,7 @@ export default function Hero() {
         </div>
 
         <motion.div
-          className="relative w-full min-w-0"
+          className="relative w-full min-w-0 lg:-mt-8"
           initial={false}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
