@@ -186,7 +186,7 @@ export default function Header({ isAdmin = false }: { isAdmin?: boolean }) {
           ~/dev_portfolio_v2.0
         </Link>
 
-        <nav className="hidden items-center gap-6 lg:flex xl:gap-8" aria-label="Primary">
+        <nav className="hidden items-center gap-6 xl:flex xl:gap-8" aria-label="Primary">
           {NAV_LINKS.map((link) => {
             const active = isNavActive(link.href, pathname, hash);
             return (
@@ -212,7 +212,7 @@ export default function Header({ isAdmin = false }: { isAdmin?: boolean }) {
           })}
         </nav>
 
-        <div className="hidden items-center gap-6 lg:flex">
+        <div className="hidden items-center gap-6 xl:flex">
           <button
             type="button"
             className="text-foreground-muted transition-colors hover:text-primary"
@@ -225,7 +225,7 @@ export default function Header({ isAdmin = false }: { isAdmin?: boolean }) {
 
         <button
           type="button"
-          className="relative z-50 flex size-10 items-center justify-center text-foreground lg:hidden"
+          className="relative z-50 flex size-10 items-center justify-center text-foreground xl:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -261,7 +261,7 @@ export default function Header({ isAdmin = false }: { isAdmin?: boolean }) {
         {open && (
           <motion.div
             id="mobile-nav"
-            className="fixed inset-0 z-40 lg:hidden"
+            className="fixed inset-0 z-40 xl:hidden"
             initial={reduceMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

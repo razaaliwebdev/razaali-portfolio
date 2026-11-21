@@ -292,7 +292,7 @@ function HeroIntro({ reduceMotion }: { reduceMotion: boolean | null }) {
   const activeRole = ROLES[roleIndex];
 
   return (
-    <div className="flex h-full w-full flex-col justify-center gap-4.5 py-4 lg:w-full lg:gap-5 lg:py-2">
+    <div className="@container flex h-full w-full min-w-0 flex-col justify-center gap-4.5 py-4 lg:w-full lg:gap-5 lg:py-2">
       {/* $ whoami */}
       <p className="flex flex-wrap items-baseline gap-x-2 text-sm sm:text-base">
         <span>
@@ -306,7 +306,7 @@ function HeroIntro({ reduceMotion }: { reduceMotion: boolean | null }) {
       </p>
 
       {/* Hi, I'm Raza Ali_ */}
-      <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl lg:leading-[1.1]">
+      <h1 className="whitespace-nowrap text-[clamp(1.6rem,10cqi,3.75rem)] font-bold leading-[1.1] tracking-tight">
         <span className="text-foreground">{greeting.shown}</span>
         <span className="text-primary">{name.shown}</span>
         {enableType && !name.done && <Caret />}
