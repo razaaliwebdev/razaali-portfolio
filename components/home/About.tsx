@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { FileText } from "lucide-react";
 
-const PROFILE_SRC = "/images/raza.jpg";
+const PROFILE_SRC = "/images/raza.png";
 
 const MAC_DOTS = {
   close: "#FF5F57",
@@ -130,7 +130,7 @@ export default function About() {
 
           {/* Profile photo */}
           <article className="mx-auto flex h-full w-full max-w-[20rem] flex-col overflow-hidden rounded-md border border-border bg-[#0f131a] lg:mx-0 lg:max-w-none">
-            <WindowChrome title="profile.jpg" />
+            <WindowChrome title="profile.png" />
             <div className="flex min-h-0 flex-1 items-center justify-center bg-black">
               <img
                 src={PROFILE_SRC}

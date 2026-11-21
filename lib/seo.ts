@@ -189,7 +189,7 @@ export function personJsonLd() {
     jobTitle: "Full Stack Developer",
     description:
       "Full stack developer specializing in MongoDB, Express, React, Node.js, PostgreSQL, and Next.js.",
-    image: absoluteUrl("/images/raza.jpg"),
+    image: absoluteUrl("/images/raza.png"),
     email: "razaali.webdev@gmail.com",
     address: {
       "@type": "PostalAddress",

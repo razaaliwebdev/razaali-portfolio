@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
 const nextConfig: NextConfig = {
+  // Next 16.4 writes AGENTS.md on dev start; this app does not use it.
+  agentRules: false,
   // Canonical URLs: no trailing slash (matches absoluteUrl helpers)
   trailingSlash: false,
   async redirects() {
